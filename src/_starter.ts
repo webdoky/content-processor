@@ -1,11 +1,20 @@
 import { cwd } from 'process';
-import runServer from './server';
+import Runner from './runner';
 
 const baseDir = cwd();
 
-runServer({
-  pathToLocalizedContent: `${baseDir}/external/translated-content/files`,
-  pathToOriginalContent: `${baseDir}/external/original-content/files`,
-  sourceLocale: 'en-US',
-  targetLocale: 'uk',
-});
+const start = async () => {
+  const runner = new Runner({
+    pathToLocalizedContent: `${baseDir}/external/translated-content/files`,
+    pathToOriginalContent: `${baseDir}/external/original-content/files`,
+    pathToCache: `${baseDir}/cache/`,
+    sourceLocale: 'en-US',
+    targetLocale: 'uk',
+  });
+
+  await runner.init();
+
+  console.log('done processing files');
+};
+
+start();

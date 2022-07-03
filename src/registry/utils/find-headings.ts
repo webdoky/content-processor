@@ -9,7 +9,13 @@ const levels = {
   h6: 6,
 };
 
-const findHeadings = (ast) => {
+export interface Heading {
+  depth: number;
+  value: string;
+  anchor: string;
+}
+
+const findHeadings = (ast): Heading[] => {
   const headings = [];
 
   visit(

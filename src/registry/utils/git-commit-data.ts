@@ -1,21 +1,4 @@
-import { exec } from 'child_process';
-
-/**
- * Execute simple shell command (async wrapper).
- * @param {String} cmd
- * @return {Object} { stdout: String, stderr: String }
- */
-const sh = async (cmd): Promise<{ stdout: string; stderr: string }> => {
-  return new Promise(function (resolve, reject) {
-    exec(cmd, (err, stdout, stderr) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve({ stdout, stderr });
-      }
-    });
-  });
-};
+import sh from './shell';
 
 // Provides a date in ISO 8601 format, like 2021-07-28T14:15:50-07:00
 const getLastCommitDate = async (filePath, repoPath) => {

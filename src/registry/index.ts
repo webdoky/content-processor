@@ -64,6 +64,10 @@ class Registry {
   pagePostProcessedAmount = 0;
   estimatedContentPagesAmount = 0;
 
+  constructor(options: RegistryInitOptions) {
+    this._options = options;
+  }
+
   getPagesData() {
     return this.contentPages.values();
   }
@@ -76,8 +80,7 @@ class Registry {
     return this.liveSamples.values();
   }
 
-  async init(options: RegistryInitOptions) {
-    this._options = options;
+  async init() {
     const {
       sourceLocale,
       pathToOriginalContent,

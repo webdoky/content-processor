@@ -12,6 +12,9 @@ coverage
 # Transpiled files
 build/
 
+# Generated files
+cache/
+
 # VS Code
 .vscode
 !.vscode/tasks.js

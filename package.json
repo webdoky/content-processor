@@ -1,7 +1,7 @@
 {
-  "name": "@webdoky/content-server",
+  "name": "@webdoky/content-processor",
   "version": "1.0.0",
-  "description": "Content server for WebDoky project",
+  "description": "Content processor for WebDoky project",
   "type": "module",
   "engines": {
     "node": ">= 16.13 <17"
@@ -13,7 +13,7 @@
     "eslint": "~8.16",
     "eslint-config-prettier": "~8.5",
     "prettier": "~2.6",
-    "rimraf": "~3.0",
+    "rimraf": "^3.0.2",
     "tsutils": "~3.21"
   },
   "scripts": {
@@ -28,8 +28,8 @@
     "prettier": "prettier --config .prettierrc --write .",
     "test:watch": "ava --watch"
   },
-  "author": "Jakub Synowiec <jsynowiec@users.noreply.github.com>",
-  "license": "Apache-2.0",
+  "author": "WebDoky team <webdoky.org@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "@webdoky/yari-ports": "2.18.1",
     "ava": "^4.3.0",
@@ -57,9 +57,6 @@
     "unified": "^10.1.1",
     "unist-util-visit": "^4.1.0",
     "unist-util-visit-parents": "^5.1.0"
-  },
-  "volta": {
-    "node": "16.13.0"
   },
   "ava": {
     "extensions": {
