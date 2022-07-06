@@ -11,10 +11,12 @@ export default {
     nodeResolve({
       jsnext: true,
       main: true,
+      preferBuiltins: true,
     }),
     commonjs({
       include: 'node_modules/**',
     }),
     json(),
-  ]
+  ],
+  external: ['mdast-util-to-hast', 'glob', 'gray-matter'],
 };
