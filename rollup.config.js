@@ -5,7 +5,8 @@ import json from '@rollup/plugin-json';
 export default {
   input: './build/src/main.js',
   output: {
-      dir: 'dist',
+    dir: 'dist',
+    format: 'es',
   },
   plugins: [
     nodeResolve({
@@ -18,5 +19,18 @@ export default {
     }),
     json(),
   ],
-  external: ['mdast-util-to-hast', 'glob', 'gray-matter'],
+  external: [
+    'mdast-util-to-hast',
+    'glob',
+    'gray-matter',
+    'unified',
+    'rehype-prism',
+    'rehype-parse',
+    'rehype-autolink-headings',
+    'rehype-raw',
+    'lodash',
+    'github-slugger',
+    'cyrillic-to-translit-js',
+    'rimraf',
+  ],
 };
