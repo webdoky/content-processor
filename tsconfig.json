@@ -19,6 +19,7 @@
     "noImplicitThis": false,
     "strictNullChecks": false,
     "skipLibCheck": true,
+    "esModuleInterop": true
   },
   "include": ["src/**/*", "__tests__/**/*"]
 }
