@@ -1500,10 +1500,10 @@
   resolved "https://registry.yarnpkg.com/@use-it/interval/-/interval-1.0.0.tgz#c42c68f22ca29a0dc929041746373d94496d2b3a"
   integrity sha512-WQFcnSt/xM/mS8ZtJ0ut5lhPrl+V0HDPPcI/J0eUClsfiD+/r8A7IeW/pVcfpSVGWRmN3+WnjNteWuKyWs2WZg==
 
-"@webdoky/yari-ports@^2.19.1":
-  version "2.19.1"
-  resolved "https://registry.yarnpkg.com/@webdoky/yari-ports/-/yari-ports-2.19.1.tgz#ce3e9844bbffa557f5e7d3a01506f14d4ea54e2c"
-  integrity sha512-NtyMFCT/IdecWIR1TGGcjTY4wXnN8xl5GbdH2Ai61uhHkeF+dzQ5tcCzWfFPTrsNJ0Mu5knExVXno8Jo463/Xw==
+"@webdoky/yari-ports@^2.19.2":
+  version "2.19.2"
+  resolved "https://registry.yarnpkg.com/@webdoky/yari-ports/-/yari-ports-2.19.2.tgz#d4c4c7bc4cc7d969365d33b191b92e62e53b0d1b"
+  integrity sha512-2S5C4f89N68WxDLC5aSQEGVG3Irc4nTLUq7nbiD3M8xB9UOCM4yUL2Be9EHM+5djyCx0TXugbP1oAvZM7bTUYQ==
   dependencies:
     "@babel/core" "^7.18.6"
     "@babel/eslint-parser" "^7.18.2"
