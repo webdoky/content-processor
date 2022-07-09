@@ -77,7 +77,7 @@ class Registry {
   }
 
   getLiveSamples() {
-    return this.liveSamples.values();
+    return Array.from(this.liveSamples.values());
   }
 
   async init() {
