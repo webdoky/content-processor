@@ -45,5 +45,6 @@ export default {
     "remark-rehype",
     "unist-util-visit",
     "unist-util-visit-parents",
+    "sanitize-filename",
   ],
 };
