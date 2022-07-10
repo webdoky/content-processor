@@ -15,7 +15,6 @@
     "eslint-config-prettier": "~8.5",
     "eslint-plugin-prettier": "^4.0.0",
     "prettier": "~2.6",
-    "rimraf": "^3.0.2",
     "tsutils": "~3.21"
   },
   "scripts": {
@@ -33,6 +32,7 @@
   "author": "WebDoky team <webdoky.org@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "rimraf": "^3.0.2",
     "@rollup/plugin-commonjs": "^22.0.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
