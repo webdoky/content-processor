@@ -326,7 +326,7 @@ class Registry {
 
       this.contentPages.set(slug, {
         ...page,
-        content: postProcessedContent,
+        content: postProcessedContent.toString(),
       });
     }
 
