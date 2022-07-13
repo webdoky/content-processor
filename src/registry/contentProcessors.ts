@@ -12,6 +12,7 @@ import yariPorts from '@webdoky/yari-ports';
 import { list as defaultListHandler } from 'mdast-util-to-hast/lib/handlers/list';
 import externalLinks from './utils/plugins/external-links';
 import htmlSlugify from './utils/plugins/html-slugify copy';
+import checkLinksToMissingTranslations from './utils/plugins/missing-translations';
 
 const { markdown: yariMarkdownUtils } = yariPorts;
 // https://github.com/mdn/yari/blob/b0dbaed4bc4135b51217400f750179b4a3bebc28/markdown/m2h/handlers/dl.js
@@ -24,6 +25,17 @@ export const htmlParseAndProcess = unified()
     target: '_blank',
     rel: ['noopener', 'noreferrer'],
   });
+
+interface HtmlPostProcessorOptions {
+  existingLinks: string[];
+}
+
+export const createHtmlPostProcessor = (options: HtmlPostProcessorOptions) => {
+  return unified()
+    .use(rehypeParse, { fragment: true })
+    .use([[checkLinksToMissingTranslations, options]])
+    .use(rehypeStringify, { allowDangerousHtml: true });
+};
 
 export const mdParseAndProcess = unified()
   .use(remarkParse)

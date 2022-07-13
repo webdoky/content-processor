@@ -3,7 +3,11 @@ import extractDescription from './utils/extract-description';
 import walk from './utils/walk';
 import { runMacros } from './macros-runner';
 import { getNewCommits } from './utils/git-commit-data';
-import { mdParseAndProcess, htmlProcess } from './contentProcessors';
+import {
+  mdParseAndProcess,
+  htmlProcess,
+  createHtmlPostProcessor,
+} from './contentProcessors';
 import findHeadings from './utils/find-headings';
 import findFragments from './utils/find-fragments';
 import findReferences from './utils/find-references';
@@ -54,7 +58,7 @@ class Registry {
   localizedContentMap?: Map<string, string>;
   contentPages = new Map();
   liveSamples?: Set<ExtractedSample> = new Set();
-  existingInternalDestinations = new Set();
+  existingInternalDestinations: Set<string> = new Set();
   unlocalizedInternalDests: Set<string> = new Set();
   translatedInternalDests: Set<string> = new Set();
 
@@ -304,7 +308,30 @@ class Registry {
     }
 
     console.log(
-      `Content has been rendered, ${this.pagePostProcessedAmount} processed`,
+      `Initial registry is ready, ${this.pagePostProcessedAmount} pages processed`,
+    );
+
+    const contentfulPagesSlugs = Array.from(this.contentPages.values())
+      .filter((page) => page.hasLocalizedContent)
+      .map((page) => page.data.slug);
+
+    const htmlPostProcessor = createHtmlPostProcessor({
+      existingLinks: Array.from(this.existingInternalDestinations),
+    });
+
+    for (const slug of contentfulPagesSlugs) {
+      const page = this.contentPages.get(slug);
+
+      const postProcessedContent = htmlPostProcessor.processSync(page.content);
+
+      this.contentPages.set(slug, {
+        ...page,
+        content: postProcessedContent,
+      });
+    }
+
+    console.log(
+      `Content has been rendered, ${contentfulPagesSlugs.length} pages with content processed`,
     );
   }
 
