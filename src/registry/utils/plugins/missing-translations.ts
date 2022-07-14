@@ -34,8 +34,6 @@ const checkLinksToMissingTranslations = (options: Options = {}) => {
     existingLinks.map(dropHash).map(dropLocale),
   );
 
-  console.log(uniqExistingLinks, 'uniqExistingLinks????');
-
   return (tree) => {
     visit(tree, 'element', (node: HtmlNode) => {
       if (
@@ -44,8 +42,11 @@ const checkLinksToMissingTranslations = (options: Options = {}) => {
         typeof node.properties.href === 'string'
       ) {
         const url = node.properties.href;
-        if (url.startsWith('#')) {
-          // omit local anchors
+        if (
+          url.startsWith('#') || // omit local anchors
+          url.startsWith('https://') || // omit external links
+          url.startsWith('http://')
+        ) {
           return;
         }
 
