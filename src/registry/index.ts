@@ -172,7 +172,7 @@ class Registry {
       const {
         content: rawContent,
         data,
-        data: { 'browser-compat': browserCompat },
+        data: { 'browser-compat': browserCompat, title },
         path,
         hasLocalizedContent,
         ...otherPageData
@@ -183,6 +183,7 @@ class Registry {
         {
           path,
           slug,
+          title,
           registry: this,
           targetLocale,
           browserCompat,
@@ -224,7 +225,7 @@ class Registry {
       } = pageData;
       const {
         path,
-        data: { 'browser-compat': browserCompat },
+        data: { 'browser-compat': browserCompat, title },
       } = pageData;
 
       const sourceProcessor =
@@ -242,6 +243,7 @@ class Registry {
         {
           path,
           slug,
+          title,
           registry: this,
           targetLocale,
           browserCompat,
