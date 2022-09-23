@@ -112,16 +112,27 @@ const extractLiveSamples = (ast): { [key: string]: ExtractedSample } => {
             const {
               properties: { className },
             } = sectionNode;
+            let key: 'css' | 'html' | 'js';
+            let content: string;
+
             if (className.includes(cssSampleClassName)) {
-              collectedSamples[node.properties.id].content.css =
-                getTextContent(sectionNode);
+              key = 'css';
+              content = getTextContent(sectionNode);
             } else if (className.includes(htmlSampleClassName)) {
-              collectedSamples[node.properties.id].content.html =
-                getTextContent(sectionNode);
+              key = 'html';
+              content = getTextContent(sectionNode);
             } else if (className.includes(jsSampleClassName)) {
-              collectedSamples[node.properties.id].content.js =
-                getTextContent(sectionNode);
+              key = 'js';
+              content = getTextContent(sectionNode);
             }
+
+            // concat samples
+            collectedSamples[node.properties.id].content[key] =
+              collectedSamples[node.properties.id].content[key]
+                ? `${
+                    collectedSamples[node.properties.id].content[key]
+                  }\n${content}`
+                : content;
           },
         );
       } else {
