@@ -92,6 +92,10 @@ class Registry {
       pathToLocalizedContent,
     } = this._options;
 
+    const glossarySourcePages = await walk(
+      `${pathToOriginalContent}/${sourceLocale.toLowerCase()}/glossary`,
+    );
+
     const cssSourcePages = await walk(
       `${pathToOriginalContent}/${sourceLocale.toLowerCase()}/web/css`,
     );
@@ -127,6 +131,10 @@ class Registry {
     );
 
     console.log('rendering pages...');
+    const glossaryProcessingTasks = await this.processSection(
+      glossarySourcePages,
+      'glossary',
+    );
     const cssProcessingTasks = await this.processSection(cssSourcePages, 'css');
     const htmlProcessingTasks = await this.processSection(
       htmlSourcePages,
@@ -151,6 +159,7 @@ class Registry {
       'JavaScript Pages': javascriptProcessingTasks.length,
       'SVG Pages': svgProcessingTasks.length,
       Guides: guideProcessingTasks.length,
+      Glossary: glossaryProcessingTasks.length,
       'Other Pages': otherPagesProcessingTasks.length,
     });
     const aggregatedTasks = [
@@ -159,6 +168,7 @@ class Registry {
       ...javascriptProcessingTasks,
       ...svgProcessingTasks,
       ...guideProcessingTasks,
+      ...glossaryProcessingTasks,
       ...otherPagesProcessingTasks,
     ];
     this.estimatedContentPagesAmount = aggregatedTasks.length;
