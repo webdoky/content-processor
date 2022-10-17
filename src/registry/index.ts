@@ -454,14 +454,14 @@ class Registry {
     };
   }
 
-  async processMdPage(mdContent: string) {
+  processMdPage = async (mdContent: string) => {
     const parsedInput = mdParseAndProcess.parse(mdContent);
 
     const linkedContentAst = await mdParseAndProcess.run(parsedInput);
 
-    const processedRehypeAst = await htmlProcess.run(linkedContentAst);
+    const processedRehypeAst = await htmlProcess.run(linkedContentAst as any); // TODO: type AST transformations
 
-    const content = htmlProcess.stringify(processedRehypeAst);
+    const content = htmlProcess.stringify(processedRehypeAst as any);
     const headings = findHeadings(linkedContentAst);
     const fragments = findFragments(linkedContentAst);
     const references = findReferences(linkedContentAst);
@@ -474,9 +474,10 @@ class Registry {
       references,
       description,
     };
-  }
+  };
 
-  async processHtmlPage(htmlContent) {
+  // TODO: seems unused now
+  async processHtmlPage(htmlContent: string) {
     const parsedInputAst = htmlParseAndProcess.parse(htmlContent);
     const linkedContentAst = await htmlParseAndProcess.run(parsedInputAst);
     const processedHtmlAst = await htmlProcess.run(linkedContentAst);

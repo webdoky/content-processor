@@ -13,6 +13,7 @@ import { list as defaultListHandler } from 'mdast-util-to-hast/lib/handlers/list
 import externalLinks from './utils/plugins/external-links';
 import htmlSlugify from './utils/plugins/html-slugify copy';
 import checkLinksToMissingTranslations from './utils/plugins/missing-translations';
+import addTableScroll from './utils/plugins/table-scroll';
 
 const { markdown: yariMarkdownUtils } = yariPorts;
 // https://github.com/mdn/yari/blob/b0dbaed4bc4135b51217400f750179b4a3bebc28/markdown/m2h/handlers/dl.js
@@ -94,7 +95,7 @@ export const mdToRehype = unified()
   .use(rehypeRaw);
 
 export const htmlProcess = unified()
-  .use(rehypePrism) // Syntax highlighting in code blocks
+  .use([rehypePrism, addTableScroll])
   // TODO:
   // [
   //   remarkAutolinkHeadings,
