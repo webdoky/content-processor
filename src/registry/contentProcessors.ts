@@ -25,6 +25,7 @@ export const htmlParseAndProcess = unified()
   .use(externalLinks, {
     target: '_blank',
     rel: ['noopener', 'noreferrer'],
+    className: 'wd-external',
   });
 
 interface HtmlPostProcessorOptions {
@@ -75,6 +76,7 @@ export const mdParseAndProcess = unified()
       {
         target: '_blank',
         rel: ['noopener', 'noreferrer'],
+        className: 'wd-external',
       },
     ],
   ]);

@@ -11,6 +11,7 @@ const defaultProtocols = ['http', 'https'];
 interface Options {
   target?: string | boolean;
   rel?: string | string[] | boolean;
+  className?: string;
   protocols?: string | string[];
   content?: unknown;
   contentProperties?: unknown;
@@ -30,6 +31,7 @@ const externalLinks = (options: Options = {}) => {
       ? [options.content]
       : options.content;
   const contentProperties = options.contentProperties || {};
+  const className = options.className;
 
   return (tree) => {
     visit(tree, 'element', (node) => {
@@ -44,6 +46,13 @@ const externalLinks = (options: Options = {}) => {
         if (isAbsoluteUrl(url) && protocols.includes(protocol)) {
           if (target !== false) {
             node.properties.target = target || defaultTarget;
+          }
+
+          if (className) {
+            node.properties.className =
+              (node.properties.className
+                ? `${node.properties.className} `
+                : '') + className;
           }
 
           if (rel !== false) {
