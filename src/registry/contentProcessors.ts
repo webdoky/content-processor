@@ -14,6 +14,7 @@ import externalLinks from './utils/plugins/external-links';
 import htmlSlugify from './utils/plugins/html-slugify copy';
 import checkLinksToMissingTranslations from './utils/plugins/missing-translations';
 import addTableScroll from './utils/plugins/table-scroll';
+import cleanupCodeSamples from './utils/plugins/cleanup-code-samples';
 
 const { markdown: yariMarkdownUtils } = yariPorts;
 // https://github.com/mdn/yari/blob/b0dbaed4bc4135b51217400f750179b4a3bebc28/markdown/m2h/handlers/dl.js
@@ -43,7 +44,7 @@ export const createHtmlPostProcessor = (options: HtmlPostProcessorOptions) => {
 
 export const mdParseAndProcess = unified()
   .use(remarkParse)
-  .use(remarkGfm)
+  .use([remarkGfm, cleanupCodeSamples])
   .use(remarkRehype, {
     handlers: {
       list(h, node) {
