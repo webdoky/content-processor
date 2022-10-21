@@ -1,5 +1,5 @@
 // Note: this is almost a complete verbatim from https://github.com/mdn/yari
-import u from 'unist-builder';
+import { u } from 'unist-builder';
 
 /**
  * Transform a Markdown code block into a <pre>.
