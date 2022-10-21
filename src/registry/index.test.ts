@@ -27,7 +27,7 @@ const mdContent = `**JavaScript** (**JS**) &mdash; це невибаглива �
 
 Зверніться до [тематики "JavaScript" у нашому навчальному розділі](/uk/docs/Learn/JavaScript), якщо ви маєте бажання вчити JavaScript, але не маєте попереднього досвіду роботи з JavaScript чи програмування загалом. Повний список модулів, доступних там, виглядає так:`;
 
-const parsedMdToHtmlSample = `<p><strong>JavaScript</strong> (<strong>JS</strong>) — це невибаглива до ресурсів мова програмування з {{Glossary("First-class Function", "функціями першого класу")}}, код якої інтерпретується, або компілюється <a href="https://uk.wikipedia.org/wiki/JIT-%D0%BA%D0%BE%D0%BC%D0%BF%D1%96%D0%BB%D1%8F%D1%86%D1%96%D1%8F" target="_blank" rel="noopener,noreferrer">"на льоту"</a>. Хоча JavaScript насамперед відома як скриптова мова для вебсторінок, вона також використовується у <a href="https://uk.wikipedia.org/wiki/JavaScript#%D0%97%D0%B0%D1%81%D1%82%D0%BE%D1%81%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F" target="_blank" rel="noopener,noreferrer">багатьох не браузерних середовищах</a>, як от: {{Glossary("Node.js")}}, <a href="https://couchdb.apache.org/" target="_blank" rel="noopener,noreferrer">Apache CouchDB</a> та <a href="https://opensource.adobe.com/dc-acrobat-sdk-docs/acrobatsdk/" target="_blank" rel="noopener,noreferrer">Adobe Acrobat</a>. JavaScript — це {{Glossary("Prototype-based programming", "прототипна")}}, однопотокова динамічна мова, що має декілька парадигм та підтримує об'єктноорієнтований, та декларативні (зокрема функційне програмування) стилі. Більше <a href="/uk/docs/Web/JavaScript/About_JavaScript">про JavaScript</a>.</p>
+const parsedMdToHtmlSample = `<p><strong>JavaScript</strong> (<strong>JS</strong>) — це невибаглива до ресурсів мова програмування з {{Glossary("First-class Function", "функціями першого класу")}}, код якої інтерпретується, або компілюється <a href="https://uk.wikipedia.org/wiki/JIT-%D0%BA%D0%BE%D0%BC%D0%BF%D1%96%D0%BB%D1%8F%D1%86%D1%96%D1%8F" target="_blank" class="wd-external" rel="noopener,noreferrer">"на льоту"</a>. Хоча JavaScript насамперед відома як скриптова мова для вебсторінок, вона також використовується у <a href="https://uk.wikipedia.org/wiki/JavaScript#%D0%97%D0%B0%D1%81%D1%82%D0%BE%D1%81%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F" target="_blank" class="wd-external" rel="noopener,noreferrer">багатьох не браузерних середовищах</a>, як от: {{Glossary("Node.js")}}, <a href="https://couchdb.apache.org/" target="_blank" class="wd-external" rel="noopener,noreferrer">Apache CouchDB</a> та <a href="https://opensource.adobe.com/dc-acrobat-sdk-docs/acrobatsdk/" target="_blank" class="wd-external" rel="noopener,noreferrer">Adobe Acrobat</a>. JavaScript — це {{Glossary("Prototype-based programming", "прототипна")}}, однопотокова динамічна мова, що має декілька парадигм та підтримує об'єктноорієнтований, та декларативні (зокрема функційне програмування) стилі. Більше <a href="/uk/docs/Web/JavaScript/About_JavaScript">про JavaScript</a>.</p>
 <blockquote>
 <p><strong>Callout:</strong> <strong>Хочете стати фронтенд розробником?</strong></p>
 <p>Ми зібрали докупи курс, що містить всю необхідну інформацію, яка знадобиться вам
@@ -59,35 +59,71 @@ const mixedMdHtmlContent = `**JavaScript** (**JS**) &mdash; це невибаг�
 
 Цей розділ присвячено саме мові JavaScript, і він не стосується тонкощів роботи з вебсторінками, чи іншими середовищами для виконання JavaScript. Інформацію стосовно конкретних <a href="/uk/docs/Glossary/API">API</a> вебсторінок дивіться у [веб API](/uk/docs/Web/API) та <a href="/uk/docs/Glossary/DOM">DOM</a>.`;
 
-const mixedContentInHtml = `<p><strong>JavaScript</strong> (<strong>JS</strong>) — це невибаглива до ресурсів мова програмування з <a href="/uk/docs/Glossary/First-class_Function">функціями першого класу</a>, код якої інтерпретується, або компілюється <a href="https://uk.wikipedia.org/wiki/JIT-%D0%BA%D0%BE%D0%BC%D0%BF%D1%96%D0%BB%D1%8F%D1%86%D1%96%D1%8F" target="_blank" rel="noopener,noreferrer">"на льоту"</a>. Хоча JavaScript насамперед відома як скриптова мова для вебсторінок, вона також використовується у <a href="https://uk.wikipedia.org/wiki/JavaScript#%D0%97%D0%B0%D1%81%D1%82%D0%BE%D1%81%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F" target="_blank" rel="noopener,noreferrer">багатьох не браузерних середовищах</a>, як от: <a href="/uk/docs/Glossary/Node.js">Node.js</a>, <a href="https://couchdb.apache.org/" target="_blank" rel="noopener,noreferrer">Apache CouchDB</a> та <a href="https://opensource.adobe.com/dc-acrobat-sdk-docs/acrobatsdk/" target="_blank" rel="noopener,noreferrer">Adobe Acrobat</a>. JavaScript — це <a href="/uk/docs/Glossary/Prototype-based_programming">прототипна</a>, однопотокова динамічна мова, що має декілька парадигм та підтримує об'єктноорієнтований, та декларативні (зокрема функційне програмування) стилі. Більше <a href="/uk/docs/Web/JavaScript/About_JavaScript">про JavaScript</a>.</p>
+const mixedContentInHtml = `<p><strong>JavaScript</strong> (<strong>JS</strong>) — це невибаглива до ресурсів мова програмування з <a href="/uk/docs/Glossary/First-class_Function">функціями першого класу</a>, код якої інтерпретується, або компілюється <a href="https://uk.wikipedia.org/wiki/JIT-%D0%BA%D0%BE%D0%BC%D0%BF%D1%96%D0%BB%D1%8F%D1%86%D1%96%D1%8F" target="_blank" class="wd-external" rel="noopener,noreferrer">"на льоту"</a>. Хоча JavaScript насамперед відома як скриптова мова для вебсторінок, вона також використовується у <a href="https://uk.wikipedia.org/wiki/JavaScript#%D0%97%D0%B0%D1%81%D1%82%D0%BE%D1%81%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F" target="_blank" class="wd-external" rel="noopener,noreferrer">багатьох не браузерних середовищах</a>, як от: <a href="/uk/docs/Glossary/Node.js">Node.js</a>, <a href="https://couchdb.apache.org/" target="_blank" class="wd-external" rel="noopener,noreferrer">Apache CouchDB</a> та <a href="https://opensource.adobe.com/dc-acrobat-sdk-docs/acrobatsdk/" target="_blank" class="wd-external" rel="noopener,noreferrer">Adobe Acrobat</a>. JavaScript — це <a href="/uk/docs/Glossary/Prototype-based_programming">прототипна</a>, однопотокова динамічна мова, що має декілька парадигм та підтримує об'єктноорієнтований, та декларативні (зокрема функційне програмування) стилі. Більше <a href="/uk/docs/Web/JavaScript/About_JavaScript">про JavaScript</a>.</p>
 <p>Цей розділ присвячено саме мові JavaScript, і він не стосується тонкощів роботи з вебсторінками, чи іншими середовищами для виконання JavaScript. Інформацію стосовно конкретних <a href="/uk/docs/Glossary/API">API</a> вебсторінок дивіться у <a href="/uk/docs/Web/API">веб API</a> та <a href="/uk/docs/Glossary/DOM">DOM</a>.</p>`;
 
 test('mdProcessor should parse markdown properly', async (t) => {
   const registry = new Registry(registryOptionsMock);
 
   const processedContent = await registry.processMdPage(mdContent);
+  const { headings, description } = registry.extractParts(processedContent);
 
   t.assert(
-    t.deepEqual(parsedMdToHtmlSample, processedContent.content),
+    t.deepEqual(parsedMdToHtmlSample, processedContent),
     'Content should match parsed sample',
   );
   t.assert(
-    t.deepEqual(headersSample, processedContent.headings),
+    t.deepEqual(headersSample, headings),
     'Headings should be contain first section',
   );
 
   t.assert(
-    t.deepEqual(parsedMdToHtmlDescriptionSample, processedContent.description),
+    t.deepEqual(parsedMdToHtmlDescriptionSample, description),
     'Content should match the text',
   );
 
-  const { content: processedMixedContent } = await registry.processMdPage(
+  const processedMixedContent = await registry.processMdPage(
     mixedMdHtmlContent,
   );
 
   t.assert(
     t.deepEqual(mixedContentInHtml, processedMixedContent),
     'Processed markdown should retain existing HTML tags',
+  );
+});
+
+const rawContentWithExternalLinks = `Хоча JavaScript насамперед відома як скриптова мова для вебсторінок, вона також використовується у [багатьох не браузерних середовищах](https://uk.wikipedia.org/wiki/JavaScript#%D0%97%D0%B0%D1%81%D1%82%D0%BE%D1%81%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F)`;
+
+const outputContentWithExternalLinks = `<p>Хоча JavaScript насамперед відома як скриптова мова для вебсторінок, вона також використовується у <a href="https://uk.wikipedia.org/wiki/JavaScript#%D0%97%D0%B0%D1%81%D1%82%D0%BE%D1%81%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F" target="_blank" class="wd-external" rel="noopener,noreferrer">багатьох не браузерних середовищах</a></p>`;
+
+test('External links', async (t) => {
+  const registry = new Registry(registryOptionsMock);
+
+  const processedContent = await registry.processMdPage(
+    rawContentWithExternalLinks,
+  );
+
+  t.assert(
+    t.deepEqual(processedContent, outputContentWithExternalLinks),
+    'should be marked with wd-external class',
+  );
+});
+
+const rawContentWithTable = `Атрибути елемента \`<input\` включають [глобальні атрибути HTML](/uk/docs/Web/HTML/Global_attributes), а також:
+
+<table><thead><tr><th>Атрибути</th></tr></thead><tbody><tr><td><a href="#accept"><code>accept</code></a></td></tr></tbody></table>`;
+
+const outputContentWithTable = `<p>Атрибути елемента <code>&#x3C;input</code> включають <a href="/uk/docs/Web/HTML/Global_attributes">глобальні атрибути HTML</a>, а також:</p>
+<div class="wd-table-scroll"><table><thead><tr><th>Атрибути</th></tr></thead><tbody><tr><td><a href="#accept"><code>accept</code></a></td></tr></tbody></table></div>`;
+
+test('Content tables', async (t) => {
+  const registry = new Registry(registryOptionsMock);
+
+  const processedContent = await registry.processMdPage(rawContentWithTable);
+
+  t.assert(
+    t.deepEqual(processedContent, outputContentWithTable),
+    'should be marked wrapperd in a scrollable wrapper with appwopriate class name',
   );
 });
 
@@ -100,7 +136,7 @@ const sourceMd = `## Специфікації
 // `;
 
 const processedMdSample = `<h2 id="spetsyfikatsii"><a aria-hidden="true" tabindex="-1" href="#spetsyfikatsii"><span class="icon icon-link"></span></a>Специфікації</h2>
-<table class="table--standard">
+<div class="wd-table-scroll"><table class="table--standard">
           <thead>
             <tr>
               <th scope="col">Специфікація</th>
@@ -120,7 +156,7 @@ const processedMdSample = `<h2 id="spetsyfikatsii"><a aria-hidden="true" tabinde
               </td>
             </tr>
           </tbody>
-        </table>`;
+        </table></div>`;
 
 test('mdProcessor should run two subsequent transformations', async (t) => {
   const { content: expandedMacros } = runMacros(sourceMd, {
@@ -133,9 +169,7 @@ test('mdProcessor should run two subsequent transformations', async (t) => {
 
   const registry = new Registry(registryOptionsMock);
 
-  const { content: processedContent } = await registry.processMdPage(
-    expandedMacros,
-  );
+  const processedContent = await registry.processMdPage(expandedMacros);
 
   t.assert(
     t.deepEqual(processedMdSample, processedContent),
@@ -165,9 +199,7 @@ const processedMdWithDlDtSyntax = `<h3 id="ekskliuzyvni-atrybuty"><a aria-hidden
 test('mdProcessor should process custom syntax for dl-dt nodes, with injecting ID attributes', async (t) => {
   const registry = new Registry(registryOptionsMock);
 
-  const { content: processedContent } = await registry.processMdPage(
-    rawMdWithDlDtSyntax,
-  );
+  const processedContent = await registry.processMdPage(rawMdWithDlDtSyntax);
 
   t.assert(
     t.deepEqual(processedMdWithDlDtSyntax, processedContent),
@@ -183,7 +215,7 @@ const rawMdWithTable = `Атрибути елемента \`<input\` включ�
 | [\`alt\`](#alt)                       | image                            | Атрибут \`alt\` для типу зображення. Необхідний для доступності                                                      |`;
 
 const processedMdWithTable = `<p>Атрибути елемента <code>&#x3C;input</code> включають <a href="/uk/docs/Web/HTML/Global_attributes">глобальні атрибути HTML</a>, а також:</p>
-<table>
+<div class="wd-table-scroll"><table>
 <thead>
 <tr>
 <th>Атрибути</th>
@@ -203,14 +235,12 @@ const processedMdWithTable = `<p>Атрибути елемента <code>&#x3C;i
 <td>Атрибут <code>alt</code> для типу зображення. Необхідний для доступності</td>
 </tr>
 </tbody>
-</table>`;
+</table></div>`;
 
 test('mdProcessor should process table syntax', async (t) => {
   const registry = new Registry(registryOptionsMock);
 
-  const { content: processedContent } = await registry.processMdPage(
-    rawMdWithTable,
-  );
+  const processedContent = await registry.processMdPage(rawMdWithTable);
 
   t.assert(
     t.deepEqual(processedMdWithTable, processedContent),

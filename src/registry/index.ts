@@ -11,7 +11,7 @@ import {
 import findHeadings from './utils/find-headings';
 import findFragments from './utils/find-fragments';
 import findReferences from './utils/find-references';
-import { htmlParseAndProcess } from './contentProcessors';
+import { htmlParseAndProcess, createHtmlParser } from './contentProcessors';
 import { promises as fs } from 'fs';
 import extractLiveSamples, {
   ExtractedSample,
@@ -45,6 +45,8 @@ const normalizeReference = (ref = '', pagePath = '') => {
   }
   return ref;
 };
+
+const sharedHtmlParser = createHtmlParser();
 
 export interface RegistryInitOptions {
   sourceLocale: string;
@@ -240,13 +242,14 @@ class Registry {
 
       const sourceProcessor =
         sourceType === 'html' ? this.processHtmlPage : this.processMdPage;
+      const content = await sourceProcessor(rawContent);
+
       const {
-        content,
         headings,
         fragments = new Set(),
         references = new Set<string>(),
         description: rawDescription,
-      } = await sourceProcessor(rawContent);
+      } = this.extractParts(content);
 
       const { content: processedDescription } = runMacros(
         rawDescription,
@@ -454,21 +457,15 @@ class Registry {
     };
   }
 
-  processMdPage = async (mdContent: string) => {
-    const parsedInput = mdParseAndProcess.parse(mdContent);
+  extractParts = (htmlContent: string) => {
+    const htmlAst = sharedHtmlParser.parse(htmlContent);
 
-    const linkedContentAst = await mdParseAndProcess.run(parsedInput);
-
-    const processedRehypeAst = await htmlProcess.run(linkedContentAst as any); // TODO: type AST transformations
-
-    const content = htmlProcess.stringify(processedRehypeAst as any);
-    const headings = findHeadings(linkedContentAst);
-    const fragments = findFragments(linkedContentAst);
-    const references = findReferences(linkedContentAst);
-    const description = extractDescription(linkedContentAst);
+    const headings = findHeadings(htmlAst);
+    const fragments = findFragments(htmlAst);
+    const references = findReferences(htmlAst);
+    const description = extractDescription(htmlAst);
 
     return {
-      content,
       headings,
       fragments,
       references,
@@ -476,25 +473,23 @@ class Registry {
     };
   };
 
+  processMdPage = async (mdContent: string) => {
+    const parsedInput = mdParseAndProcess.parse(mdContent);
+
+    const linkedContentAst = await mdParseAndProcess.run(parsedInput);
+    const processedRehypeAst = await htmlProcess.run(linkedContentAst as any); // TODO: type AST transformations
+
+    return htmlProcess.stringify(processedRehypeAst as any);
+  };
+
   // TODO: seems unused now
   async processHtmlPage(htmlContent: string) {
     const parsedInputAst = htmlParseAndProcess.parse(htmlContent);
+
     const linkedContentAst = await htmlParseAndProcess.run(parsedInputAst);
     const processedHtmlAst = await htmlProcess.run(linkedContentAst);
 
-    const content = htmlProcess.stringify(processedHtmlAst);
-    const headings = findHeadings(linkedContentAst);
-    const fragments = findFragments(linkedContentAst);
-    const references = findReferences(linkedContentAst);
-    const description = extractDescription(linkedContentAst);
-
-    return {
-      content,
-      headings,
-      fragments,
-      references,
-      description,
-    };
+    return htmlProcess.stringify(processedHtmlAst);
   }
 }
 

@@ -18,7 +18,7 @@ const addTableScroll = (options: Options = {}) => {
     visitParents(
       tree,
       (node: HtmlNode) =>
-        (node.type === 'raw' && node.value.startsWith('<table ')) ||
+        (node.type === 'raw' && node.value.startsWith('<table')) ||
         (node.type === 'element' && node.tagName === 'table'),
       (node: HtmlNode, relatives: HtmlNode[]) => {
         const ancestor = relatives[relatives.length - 1];

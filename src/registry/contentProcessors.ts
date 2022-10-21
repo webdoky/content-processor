@@ -19,8 +19,11 @@ const { markdown: yariMarkdownUtils } = yariPorts;
 // https://github.com/mdn/yari/blob/b0dbaed4bc4135b51217400f750179b4a3bebc28/markdown/m2h/handlers/dl.js
 const { isDefinitionList, asDefinitionList } = yariMarkdownUtils;
 
-export const htmlParseAndProcess = unified()
-  .use(rehypeParse, { fragment: true })
+export function createHtmlParser() {
+  return unified().use(rehypeParse, { fragment: true });
+}
+
+export const htmlParseAndProcess = createHtmlParser()
   .use(rehypeAutolinkHeadings) // Wrap headings in links, so they became inteactive
   .use(externalLinks, {
     target: '_blank',
@@ -33,8 +36,7 @@ interface HtmlPostProcessorOptions {
 }
 
 export const createHtmlPostProcessor = (options: HtmlPostProcessorOptions) => {
-  return unified()
-    .use(rehypeParse, { fragment: true })
+  return createHtmlParser()
     .use([[checkLinksToMissingTranslations, options]])
     .use(rehypeStringify, { allowDangerousHtml: true });
 };
