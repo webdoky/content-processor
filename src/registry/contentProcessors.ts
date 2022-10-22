@@ -52,6 +52,7 @@ export const mdParseAndProcess = unified()
     [
       rehypeAutolinkHeadings,
       {
+        behavior: 'append',
         content: {
           type: 'element',
           tagName: 'span',
