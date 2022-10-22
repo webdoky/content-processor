@@ -1,9 +1,9 @@
-// Note: this is almost a complete verbatim from https://github.com/mdn/yari
+// Note: this is in many ways a verbatim from https://github.com/mdn/yari
 import { u } from 'unist-builder';
 
 /**
  * Transform a Markdown code block into a <pre>.
- * Adding the highlight tags as classes prefixed by "brush:"
+ * Adding the highlight tags as classes
  */
 export function code(h, node) {
   const value = node.value ? node.value + '\n' : '';
@@ -18,14 +18,11 @@ export function code(h, node) {
   }
 
   /*
-   * Prism will inject a <code> element so we don't.
-   * If we want to change this, uncomment the following code:
+   * Inject a <code> element so prism gets it correctly.
    */
-  // const code = h(node, "code", props, [u("text", value)]);
-  // if (node.meta) {
-  //   code.data = { meta: node.meta };
-  // }
-  // return h(node.position, "pre", props, [code]);
-
-  return h(node.position, 'pre', props, [u('text', value)]);
+  const code = h(node, 'code', props, [u('text', value)]);
+  if (node.meta) {
+    code.data = { meta: node.meta };
+  }
+  return h(node.position, 'pre', props, [code]);
 }
