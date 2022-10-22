@@ -34,9 +34,9 @@ const parsedMdToHtmlSample = `<p><strong>JavaScript</strong> (<strong>JS</strong
 для роботи над досягненням цієї мети</p>
 <p><a href="/uk/docs/Learn/Front-end_web_developer"><strong>Почати</strong></a></p>
 </blockquote>
-<h2 id="posibnyky"><a aria-hidden="true" tabindex="-1" href="#posibnyky"><span class="icon icon-link"></span></a>Посібники</h2>
+<h2 id="posibnyky">Посібники<a aria-hidden="true" tabindex="-1" href="#posibnyky"><span class="icon icon-link"></span></a></h2>
 <p>Вчіться програмувати на JavaScript за допомогою наших настанов та посібників.</p>
-<h3 id="dlia-absoliutnykh-pochatkivtsiv"><a aria-hidden="true" tabindex="-1" href="#dlia-absoliutnykh-pochatkivtsiv"><span class="icon icon-link"></span></a>Для абсолютних початківців</h3>
+<h3 id="dlia-absoliutnykh-pochatkivtsiv">Для абсолютних початківців<a aria-hidden="true" tabindex="-1" href="#dlia-absoliutnykh-pochatkivtsiv"><span class="icon icon-link"></span></a></h3>
 <p>Зверніться до <a href="/uk/docs/Learn/JavaScript">тематики "JavaScript" у нашому навчальному розділі</a>, якщо ви маєте бажання вчити JavaScript, але не маєте попереднього досвіду роботи з JavaScript чи програмування загалом. Повний список модулів, доступних там, виглядає так:</p>`;
 
 const parsedMdToHtmlDescriptionSample =
@@ -135,7 +135,7 @@ const sourceMd = `## Специфікації
 // <table class="table--standard">
 // `;
 
-const processedMdSample = `<h2 id="spetsyfikatsii"><a aria-hidden="true" tabindex="-1" href="#spetsyfikatsii"><span class="icon icon-link"></span></a>Специфікації</h2>
+const processedMdSample = `<h2 id="spetsyfikatsii">Специфікації<a aria-hidden="true" tabindex="-1" href="#spetsyfikatsii"><span class="icon icon-link"></span></a></h2>
 <div class="wd-table-scroll"><table class="table--standard">
           <thead>
             <tr>
@@ -188,7 +188,7 @@ const rawMdWithDlDtSyntax = `### Ексклюзивні атрибути
   - : Дійсний лише для кнопки \`image\`. Атрибут \`alt\` задає альтернативний текст для кнопки, що буде показаний, якщо зображення [\`src\`](#src) немає або його не виходить завантажити. Дивіться тип поля введення {{HTMLElement("input/image", "image")}}.
 `;
 
-const processedMdWithDlDtSyntax = `<h3 id="ekskliuzyvni-atrybuty"><a aria-hidden="true" tabindex="-1" href="#ekskliuzyvni-atrybuty"><span class="icon icon-link"></span></a>Ексклюзивні атрибути</h3>
+const processedMdWithDlDtSyntax = `<h3 id="ekskliuzyvni-atrybuty">Ексклюзивні атрибути<a aria-hidden="true" tabindex="-1" href="#ekskliuzyvni-atrybuty"><span class="icon icon-link"></span></a></h3>
 <dl>
 <dt id="accept-pryimannia"><code>accept</code> (приймання)</dt>
 <dd><p>Дійсний лише для типу поля введення <code>file</code>. Атрибут <code>accept</code> визначає те, які типи файлів можна обрати для контрольного елемента <code>file</code>. Дивіться тип поля введення {{HTMLElement("input/file", "file")}}.</p></dd>
