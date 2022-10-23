@@ -44,17 +44,15 @@ const extractSection = (siblings: HtmlNode[], currentNode: HtmlNode) => {
   for (let i = startingIndex + 1; i <= siblings.length; i++) {
     const processedNode = siblings[i];
 
-    if (processedNode) {
-      if (headingTags.includes(processedNode?.tagName)) {
-        const processedHeadingLevel = parseInt(processedNode.tagName.slice(1));
+    if (headingTags.includes(processedNode.tagName)) {
+      const processedHeadingLevel = parseInt(processedNode.tagName.slice(1));
 
-        if (processedHeadingLevel <= headingLevel) {
-          break;
-        }
+      if (processedHeadingLevel <= headingLevel) {
+        break;
       }
-
-      children.push(processedNode);
     }
+
+    children.push(processedNode);
   }
 
   return {
