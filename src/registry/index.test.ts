@@ -113,7 +113,7 @@ const rawContentWithTable = `Атрибути елемента \`<input\` вкл
 
 <table><thead><tr><th>Атрибути</th></tr></thead><tbody><tr><td><a href="#accept"><code>accept</code></a></td></tr></tbody></table>`;
 
-const outputContentWithTable = `<p>Атрибути елемента <code><input</code> включають <a href="/uk/docs/Web/HTML/Global_attributes">глобальні атрибути HTML</a>, а також:</p>
+const outputContentWithTable = `<p>Атрибути елемента <code>&#x3C;input</code> включають <a href="/uk/docs/Web/HTML/Global_attributes">глобальні атрибути HTML</a>, а також:</p>
 <div class="wd-table-scroll"><table><thead><tr><th>Атрибути</th></tr></thead><tbody><tr><td><a href="#accept"><code>accept</code></a></td></tr></tbody></table></div>`;
 
 test('Content tables', async (t) => {
@@ -214,7 +214,7 @@ const rawMdWithTable = `Атрибути елемента \`<input\` включ�
 | [\`accept\`](#accept)                 | file                             | Вказівка щодо очікуваного типу файлу при виборі файлів до завантаження                                             |
 | [\`alt\`](#alt)                       | image                            | Атрибут \`alt\` для типу зображення. Необхідний для доступності                                                      |`;
 
-const processedMdWithTable = `<p>Атрибути елемента <code><input</code> включають <a href="/uk/docs/Web/HTML/Global_attributes">глобальні атрибути HTML</a>, а також:</p>
+const processedMdWithTable = `<p>Атрибути елемента <code>&#x3C;input</code> включають <a href="/uk/docs/Web/HTML/Global_attributes">глобальні атрибути HTML</a>, а також:</p>
 <div class="wd-table-scroll"><table>
 <thead>
 <tr>
