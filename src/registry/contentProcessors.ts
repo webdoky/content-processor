@@ -14,6 +14,7 @@ import addTableScroll from './utils/plugins/table-scroll';
 import cleanupCodeSamples from './utils/plugins/cleanup-code-samples';
 import { list } from './mdast/list';
 import { code } from './mdast/code';
+import { inlineCode } from './mdast/inlineCode';
 
 export function createHtmlParser() {
   return unified().use(rehypeParse, { fragment: true });
@@ -44,6 +45,7 @@ export const mdParseAndProcess = unified()
     handlers: {
       list,
       code,
+      inlineCode,
     },
     allowDangerousHtml: true,
   })
