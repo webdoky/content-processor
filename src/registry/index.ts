@@ -17,11 +17,25 @@ import extractLiveSamples, {
   ExtractedSample,
 } from './utils/extract-live-sample';
 
-const generateSlugToPathMap = (paths, locale): Map<string, string> => {
+/**
+ * Transforms a list of paths to content files
+ * into a Map of slugs to full paths
+ *
+ * @param {string[]} paths List of paths to content files
+ * @param {string} locale Locale
+ * @returns {Map<string, string>} Map of slugs to full paths
+ */
+const generateSlugToPathMap = (
+  paths: string[],
+  locale: string,
+): Map<string, string> => {
   const map = new Map<string, string>();
 
   paths.forEach((path) => {
-    const localPath = path.split(locale.toLowerCase())[1];
+    const separator = `files/${locale.toLowerCase()}`;
+    const localPath = path.substring(
+      path.lastIndexOf(separator) + separator.length,
+    );
     if (!localPath) {
       throw new Error(`Failed to get subpath for ${path}`);
     }
