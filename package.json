@@ -13,7 +13,7 @@
     "@types/node": "~16",
     "@typescript-eslint/eslint-plugin": "~5.26",
     "@typescript-eslint/parser": "~5.26",
-    "ava": "^4.3.0",
+    "ava": "^5.0.1",
     "eslint": "~8.16",
     "eslint-config-prettier": "~8.5",
     "eslint-plugin-prettier": "^4.0.0",
@@ -32,7 +32,7 @@
     "lint": "eslint . --ext .ts --ext .mts",
     "test": "ava --coverage",
     "prettier": "prettier --config .prettierrc --write .",
-    "test:watch": "ava --watch",
+    "test:watch": "ava --watch --verbose",
     "prepare": "husky install"
   },
   "author": "WebDoky team <webdoky.org@gmail.com>",
