@@ -17,7 +17,7 @@ export default class Context implements ContextOptions {
   slug: string;
   targetLocale: string;
   title: string;
-  web = new WebService();
+  web: WebService;
 
   constructor({
     path,
@@ -33,5 +33,6 @@ export default class Context implements ContextOptions {
     this.slug = slug;
     this.targetLocale = targetLocale;
     this.title = title;
+    this.web = new WebService(this);
   }
 }

@@ -1,7 +1,11 @@
+import type Context from '../context';
 import escapeHtml from '../utils/escape-html';
 import convertSpacesToUnderscores from '../utils/spaces-to-underscores';
 
 export default class WebService {
+  constructor(context: Context) {
+    this.link = this.link.bind(context);
+  }
   /**
    * Creates a link HTML
    */
