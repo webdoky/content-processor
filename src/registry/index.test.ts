@@ -1,4 +1,6 @@
 import test from 'ava';
+
+import Context from './context';
 import Registry from './index';
 import { runMacros } from './macros-runner';
 
@@ -159,13 +161,17 @@ const processedMdSample = `<h2 id="spetsyfikatsii">Специфікації<a ar
         </table></div>`;
 
 test('mdProcessor should run two subsequent transformations', async (t) => {
-  const { content: expandedMacros } = runMacros(sourceMd, {
-    targetLocale: 'uk',
-    registry: {},
-    path: 'testPath',
-    slug: 'testSlug',
-    browserCompat: 'javascript.builtins.String.blink',
-  });
+  const { content: expandedMacros } = runMacros(
+    sourceMd,
+    new Context({
+      browserCompat: 'javascript.builtins.String.blink',
+      path: 'testPath',
+      registry: new Registry(registryOptionsMock),
+      slug: 'testSlug',
+      targetLocale: 'uk',
+      title: 'Test page',
+    }),
+  );
 
   const registry = new Registry(registryOptionsMock);
 
