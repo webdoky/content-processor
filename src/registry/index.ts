@@ -92,6 +92,12 @@ class Registry {
     this._options = options;
   }
 
+  getChildren(slug: string) {
+    return Array.from(this.contentPages.keys())
+      .filter((slugKey) => slugKey.startsWith(slug) && slugKey !== slug)
+      .map((slugKey) => this.contentPages.get(slugKey));
+  }
+
   getPagesData() {
     return this.contentPages.values();
   }
@@ -210,14 +216,16 @@ class Registry {
 
       const { content, data: processedData } = runMacros(
         rawContent,
-        new Context({
-          browserCompat,
-          path,
-          registry: this,
-          slug,
-          targetLocale,
-          title,
-        }),
+        new Context(
+          {
+            browserCompat,
+            path,
+            slug,
+            targetLocale,
+            title,
+          },
+          this,
+        ),
         !hasLocalizedContent, // Don't run macros for non-localized pages
       );
 
@@ -271,14 +279,16 @@ class Registry {
 
       const { content: processedDescription } = runMacros(
         rawDescription,
-        new Context({
-          browserCompat,
-          path,
-          registry: this,
-          slug,
-          targetLocale,
-          title,
-        }),
+        new Context(
+          {
+            browserCompat,
+            path,
+            slug,
+            targetLocale,
+            title,
+          },
+          this,
+        ),
         !hasLocalizedContent, // Don't run macros for non-localized pages
       );
 

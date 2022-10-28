@@ -163,14 +163,16 @@ const processedMdSample = `<h2 id="spetsyfikatsii">Специфікації<a ar
 test('mdProcessor should run two subsequent transformations', async (t) => {
   const { content: expandedMacros } = runMacros(
     sourceMd,
-    new Context({
-      browserCompat: 'javascript.builtins.String.blink',
-      path: 'testPath',
-      registry: new Registry(registryOptionsMock),
-      slug: 'testSlug',
-      targetLocale: 'uk',
-      title: 'Test page',
-    }),
+    new Context(
+      {
+        browserCompat: 'javascript.builtins.String.blink',
+        path: 'testPath',
+        slug: 'testSlug',
+        targetLocale: 'uk',
+        title: 'Test page',
+      },
+      new Registry(registryOptionsMock),
+    ),
   );
 
   const registry = new Registry(registryOptionsMock);

@@ -1,38 +1,25 @@
 import type Registry from '.';
+import PageService from './environment/page';
 import WebService from './environment/web';
 
-export interface ContextOptions {
+export interface Environment {
   browserCompat: unknown;
   path: string;
-  registry: Registry;
   slug: string;
   targetLocale: string;
   title: string;
 }
 
-export default class Context implements ContextOptions {
-  browserCompat: unknown;
-  path: string;
+export default class Context {
+  env: Environment;
+  page: PageService;
   registry: Registry;
-  slug: string;
-  targetLocale: string;
-  title: string;
   web: WebService;
 
-  constructor({
-    path,
-    slug,
-    title,
-    registry,
-    targetLocale,
-    browserCompat,
-  }: ContextOptions) {
-    this.browserCompat = browserCompat;
-    this.path = path;
+  constructor(env: Environment, registry: Registry) {
+    this.env = env;
+    this.page = new PageService(this);
     this.registry = registry;
-    this.slug = slug;
-    this.targetLocale = targetLocale;
-    this.title = title;
-    this.web = new WebService(this);
+    this.web = new WebService();
   }
 }

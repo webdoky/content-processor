@@ -36,19 +36,22 @@ const processedRawContentSample =
 test('Macros runner should output valid html', async (t) => {
   const { content: processedRawContent } = runMacros(
     rawMarkdownContent,
-    new Context({
-      browserCompat: 'javascript.builtins.String.blink',
-      path: 'testPath',
-      registry: new Registry({
+    new Context(
+      {
+        browserCompat: 'javascript.builtins.String.blink',
+        path: 'testPath',
+
+        slug: 'testSlug',
+        targetLocale: 'uk',
+        title: 'Test page',
+      },
+      new Registry({
         pathToLocalizedContent: 'external/translated-content/files',
         pathToOriginalContent: 'external/original-content/files',
         sourceLocale: 'en-US',
         targetLocale: 'uk',
       }),
-      slug: 'testSlug',
-      targetLocale: 'uk',
-      title: 'Test page',
-    }),
+    ),
   );
 
   t.assert(
@@ -58,19 +61,21 @@ test('Macros runner should output valid html', async (t) => {
 
   const { content: processedContent } = runMacros(
     parsedMdToHtmlSample,
-    new Context({
-      browserCompat: 'javascript.builtins.String.blink',
-      path: 'testPath',
-      registry: new Registry({
+    new Context(
+      {
+        browserCompat: 'javascript.builtins.String.blink',
+        path: 'testPath',
+        slug: 'testSlug',
+        targetLocale: 'uk',
+        title: 'Test page',
+      },
+      new Registry({
         pathToLocalizedContent: 'external/translated-content/files',
         pathToOriginalContent: 'external/original-content/files',
         sourceLocale: 'en-US',
         targetLocale: 'uk',
       }),
-      slug: 'testSlug',
-      targetLocale: 'uk',
-      title: 'Test page',
-    }),
+    ),
   );
 
   t.assert(
