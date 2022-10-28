@@ -1,5 +1,4 @@
 import type Registry from '.';
-import PageService from './environment/page';
 import WebService from './environment/web';
 
 export interface Environment {
@@ -12,14 +11,12 @@ export interface Environment {
 
 export default class Context {
   env: Environment;
-  page: PageService;
   registry: Registry;
   web: WebService;
 
   constructor(env: Environment, registry: Registry) {
     this.env = env;
-    this.page = new PageService(this);
     this.registry = registry;
-    this.web = new WebService();
+    this.web = new WebService(this);
   }
 }
