@@ -92,12 +92,6 @@ class Registry {
     this._options = options;
   }
 
-  getChildren(slug: string) {
-    return Array.from(this.contentPages.keys())
-      .filter((slugKey) => slugKey.startsWith(slug) && slugKey !== slug)
-      .map((slugKey) => this.contentPages.get(slugKey));
-  }
-
   getPagesData() {
     return this.contentPages.values();
   }

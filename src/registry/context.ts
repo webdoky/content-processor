@@ -1,5 +1,5 @@
 import type Registry from '.';
-import WebService from './environment/web';
+import JsonService from './environment/json';
 
 export interface Environment {
   browserCompat: unknown;
@@ -11,12 +11,12 @@ export interface Environment {
 
 export default class Context {
   env: Environment;
+  json: JsonService;
   registry: Registry;
-  web: WebService;
 
   constructor(env: Environment, registry: Registry) {
     this.env = env;
     this.registry = registry;
-    this.web = new WebService(this);
+    this.json = new JsonService(this);
   }
 }

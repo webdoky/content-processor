@@ -2,10 +2,7 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import type Context from '../context';
 
-import escapeHtml from '../utils/escape-html';
-import convertSpacesToUnderscores from '../utils/spaces-to-underscores';
-
-export default class WebService {
+export default class JsonService {
   context: Context;
   constructor(context: Context) {
     this.context = context;
@@ -13,7 +10,7 @@ export default class WebService {
   /**
    * Return specific .json files from the content root
    */
-  getJSONData(name: string): unknown {
+  getData(name: string): unknown {
     const filePath = path.join(
       this.context.registry._options.pathToOriginalContent,
       'jsondata',
@@ -26,20 +23,6 @@ export default class WebService {
       throw error;
     }
   }
-  /**
-   * Creates a link HTML
-   */
-  link(uri: string, text: string, title: string, target: string): string {
-    const out = [`<a href="${convertSpacesToUnderscores(escapeHtml(uri))}"`];
-    if (title) {
-      out.push(` title="${escapeHtml(title)}"`);
-    }
-    if (target) {
-      out.push(` target="${escapeHtml(target)}"`);
-    }
-    out.push('>', escapeHtml(text || uri), '</a>');
-    return out.join('');
-  }
 }
 
 const _readJSONDataCache = new Map<string, unknown>();
@@ -48,8 +31,8 @@ function readJSONDataFile(filePath: string): unknown {
     return _readJSONDataCache.get(filePath);
   }
   const payload = JSON.parse(readFileSync(filePath, 'utf-8'));
-  if (process.env.NODE_ENV === 'production') {
-    _readJSONDataCache.set(filePath, payload);
-  }
+  // if (process.env.NODE_ENV === 'production') {
+  _readJSONDataCache.set(filePath, payload);
+  // }
   return payload;
 }
