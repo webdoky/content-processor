@@ -36,10 +36,12 @@ export const runMacros = (content, context, navigationOnly = false) => {
           result = match; // Do nothing
           if (failedMacros[functionName]) {
             failedMacros[functionName].count += 1;
+            failedMacros[functionName].lastMessage = e?.message;
             failedMacros[functionName].lastUsedExpression = match;
           } else {
             failedMacros[functionName] = {
               count: 1,
+              lastMessage: e?.message,
               lastUsedExpression: match,
             };
           }
@@ -56,6 +58,7 @@ export const runMacros = (content, context, navigationOnly = false) => {
         } else {
           failedMacros[functionName] = {
             count: 1,
+            lastMessage: 'Macro missing',
             lastUsedExpression: match,
           };
         }
@@ -82,7 +85,7 @@ export const runMacros = (content, context, navigationOnly = false) => {
     console.warn(`Got ${numberOfFailedMacros} failed macros`);
     Object.entries(failedMacros).forEach(([functionName, entry]: any) => {
       console.warn(
-        `\x1b[33m${entry.count} failed ${functionName} macros, the last expression was: ${entry.lastUsedExpression}\x1b[0m`,
+        `\x1b[33m${entry.count} failed ${functionName} macros, the last expression was: ${entry.lastUsedExpression}, message: ${entry.lastMessage}\x1b[0m`,
       );
     });
   }
