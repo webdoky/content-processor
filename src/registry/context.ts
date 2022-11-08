@@ -19,9 +19,4 @@ export default class Context {
     this.registry = registry;
     this.json = new JsonService(this);
   }
-
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  callMacro(fn: Function, ...args: unknown[]): string {
-    return fn.call(this, ...args);
-  }
 }
