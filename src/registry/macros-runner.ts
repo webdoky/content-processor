@@ -1,11 +1,16 @@
 import { kuma } from '@webdoky/yari-ports';
+import Context from './context';
 
 const { macros: Macros, parseMacroArgs, extractMacros } = kuma;
 
 // List of macros that should be processed anyway, i.e for rendering navigation
 const navigationalMacros = ['cssref', 'jssidebar', 'jsref'];
 
-export const runMacros = (content, context, navigationOnly = false) => {
+export const runMacros = (
+  content,
+  context: Context,
+  navigationOnly = false,
+) => {
   // const { path } = context;
   let resultContent = content;
   const recognizedMacros = extractMacros(content);

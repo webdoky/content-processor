@@ -1,21 +1,25 @@
-import parseFrontMatter from 'gray-matter';
-import extractDescription from './utils/extract-description';
-import walk from './utils/walk';
-import { runMacros } from './macros-runner';
-import { getNewCommits } from './utils/git-commit-data';
-import {
-  mdParseAndProcess,
-  htmlProcess,
-  createHtmlPostProcessor,
-} from './contentProcessors';
-import findHeadings from './utils/find-headings';
-import findFragments from './utils/find-fragments';
-import findReferences from './utils/find-references';
-import { htmlParseAndProcess, createHtmlParser } from './contentProcessors';
 import { promises as fs } from 'fs';
+
+import parseFrontMatter from 'gray-matter';
+
+import {
+  createHtmlParser,
+  createHtmlPostProcessor,
+  htmlParseAndProcess,
+  htmlProcess,
+  mdParseAndProcess,
+} from './contentProcessors';
+import Context from './context';
+import { runMacros } from './macros-runner';
+import extractDescription from './utils/extract-description';
 import extractLiveSamples, {
   ExtractedSample,
 } from './utils/extract-live-sample';
+import findFragments from './utils/find-fragments';
+import findHeadings from './utils/find-headings';
+import findReferences from './utils/find-references';
+import { getNewCommits } from './utils/git-commit-data';
+import walk from './utils/walk';
 
 /**
  * Transforms a list of paths to content files
@@ -206,14 +210,16 @@ class Registry {
 
       const { content, data: processedData } = runMacros(
         rawContent,
-        {
-          path,
-          slug,
-          title,
-          registry: this,
-          targetLocale,
-          browserCompat,
-        },
+        new Context(
+          {
+            browserCompat,
+            path,
+            slug,
+            targetLocale,
+            title,
+          },
+          this,
+        ),
         !hasLocalizedContent, // Don't run macros for non-localized pages
       );
 
@@ -267,14 +273,16 @@ class Registry {
 
       const { content: processedDescription } = runMacros(
         rawDescription,
-        {
-          path,
-          slug,
-          title,
-          registry: this,
-          targetLocale,
-          browserCompat,
-        },
+        new Context(
+          {
+            browserCompat,
+            path,
+            slug,
+            targetLocale,
+            title,
+          },
+          this,
+        ),
         !hasLocalizedContent, // Don't run macros for non-localized pages
       );
 
