@@ -5,6 +5,7 @@ export interface Environment {
   browserCompat: unknown;
   path: string;
   slug: string;
+  tags: string[];
   targetLocale: string;
   title: string;
 }

@@ -4,7 +4,7 @@ import Context from './context';
 const { macros: Macros, parseMacroArgs, extractMacros } = kuma;
 
 // List of macros that should be processed anyway, i.e for rendering navigation
-const navigationalMacros = ['cssref', 'jssidebar', 'jsref'];
+const navigationalMacros = ['cssref', 'jssidebar', 'jsref', 'htmlref'];
 
 export const runMacros = (
   content,
@@ -87,7 +87,9 @@ export const runMacros = (
 
   const numberOfFailedMacros = Object.keys(failedMacros).length;
   if (numberOfFailedMacros) {
-    console.warn(`Got ${numberOfFailedMacros} failed macros`);
+    console.warn(
+      `${context.env.path}: got ${numberOfFailedMacros} failed macros`,
+    );
     Object.entries(failedMacros).forEach(([functionName, entry]: any) => {
       console.warn(
         `\x1b[33m${entry.count} failed ${functionName} macros, the last expression was: ${entry.lastUsedExpression}, message: ${entry.lastMessage}\x1b[0m`,

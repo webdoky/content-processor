@@ -92,8 +92,14 @@ class Registry {
     this._options = options;
   }
 
+  getChildren(slug: string) {
+    return Array.from(this.contentPages.keys())
+      .filter((slugKey) => slugKey.startsWith(slug) && slugKey !== slug)
+      .map((slugKey) => this.contentPages.get(slugKey));
+  }
+
   getPagesData() {
-    return this.contentPages.values();
+    return Array.from(this.contentPages.values());
   }
 
   getPageBySlug(slug: string) {
@@ -102,6 +108,12 @@ class Registry {
 
   getLiveSamples() {
     return Array.from(this.liveSamples.values());
+  }
+
+  hasPage(path: string): boolean {
+    const page = this.getPageBySlug(path);
+
+    return !!page?.slug;
   }
 
   async init() {
@@ -144,6 +156,10 @@ class Registry {
     const localizedContentPages = await walk(
       `${pathToLocalizedContent}/${targetLocale.toLowerCase()}`,
     );
+
+    if (localizedContentPages.length === 0) {
+      throw new Error('localized content not found');
+    }
 
     this.localizedContentMap = generateSlugToPathMap(
       localizedContentPages,
@@ -202,11 +218,14 @@ class Registry {
       const {
         content: rawContent,
         data,
-        data: { 'browser-compat': browserCompat, title },
+        data: { 'browser-compat': browserCompat, tags, title },
         path,
         hasLocalizedContent,
         ...otherPageData
       } = pageData;
+      if (hasLocalizedContent) {
+        console.info('hasLocalizedContent', slug);
+      }
 
       const { content, data: processedData } = runMacros(
         rawContent,
@@ -215,6 +234,7 @@ class Registry {
             browserCompat,
             path,
             slug,
+            tags,
             targetLocale,
             title,
           },
@@ -257,13 +277,11 @@ class Registry {
       } = pageData;
       const {
         path,
-        data: { 'browser-compat': browserCompat, title },
+        data: { 'browser-compat': browserCompat, tags, title },
       } = pageData;
-
       const sourceProcessor =
         sourceType === 'html' ? this.processHtmlPage : this.processMdPage;
       const content = await sourceProcessor(rawContent);
-
       const {
         headings,
         fragments = new Set(),
@@ -278,6 +296,7 @@ class Registry {
             browserCompat,
             path,
             slug,
+            tags,
             targetLocale,
             title,
           },

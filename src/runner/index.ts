@@ -52,6 +52,10 @@ export default class Runner {
         translationLastUpdatedAt,
       } = page;
 
+      if (!headings) {
+        throw new Error(`No headings for ${data.slug}`);
+      }
+
       this.indexData.push({
         slug: data.slug || '',
         title: data.title || '',
@@ -69,7 +73,7 @@ export default class Runner {
         originalPath,
         updatesInOriginalRepo,
         section,
-        sourceLastUpdatetAt: 0,
+        sourceLastUpdatedAt: 0,
         translationLastUpdatedAt,
       });
     }
@@ -92,7 +96,7 @@ export default class Runner {
       const { path, references } = page;
 
       // Check if links in the content lead to sensible destinations
-      references.forEach((refItem) => {
+      references?.forEach?.((refItem) => {
         if (
           !isExternalLink(refItem) &&
           !translatedInternalDests.has(refItem) &&
@@ -137,6 +141,13 @@ export default class Runner {
     const mainIndexFilePath = path.resolve(pathToCache, mainIndexFile);
 
     console.log(mainIndexFilePath, 'writing to file');
+    // console.info(JSON.stringify(indexData, null, 2));
+    if (indexData.length === 0) {
+      throw new Error('Index is empty');
+    }
+    if (!indexData.some(({ hasContent }) => hasContent)) {
+      throw new Error("Index doesn't have pages with content");
+    }
 
     await fs.writeFile(
       mainIndexFilePath,
