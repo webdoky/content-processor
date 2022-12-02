@@ -92,8 +92,16 @@ class Registry {
     this._options = options;
   }
 
+  #getAllSlugs() {
+    return Array.from(this.contentPages.keys());
+  }
+
+  #getPagesEntries() {
+    return Array.from(this.contentPages.entries());
+  }
+
   getChildren(slug: string) {
-    return Array.from(this.contentPages.keys())
+    return this.#getAllSlugs()
       .filter((slugKey) => slugKey.startsWith(slug) && slugKey !== slug)
       .map((slugKey) => this.contentPages.get(slugKey));
   }
@@ -214,7 +222,7 @@ class Registry {
     //
     console.log('Initial registry is ready, expanding macros:');
 
-    for (const [slug, pageData] of this.contentPages) {
+    for (const [slug, pageData] of this.#getPagesEntries()) {
       const {
         content: rawContent,
         data,
@@ -268,7 +276,7 @@ class Registry {
       `Done with macros, ${this.expandedMacrosFor} processed.\nRendering pages:`,
     );
 
-    for (const [slug, pageData] of this.contentPages) {
+    for (const [slug, pageData] of this.#getPagesEntries()) {
       const {
         hasLocalizedContent,
         content: rawContent,
@@ -283,7 +291,7 @@ class Registry {
         sourceType === 'html' ? this.processHtmlPage : this.processMdPage;
       const content = await sourceProcessor(rawContent);
       const {
-        headings,
+        headings = [],
         fragments = new Set(),
         references = new Set<string>(),
         description: rawDescription,
@@ -367,7 +375,7 @@ class Registry {
       `Initial registry is ready, ${this.pagePostProcessedAmount} pages processed`,
     );
 
-    const contentfulPagesSlugs = Array.from(this.contentPages.values())
+    const contentfulPagesSlugs = this.getPagesData()
       .filter((page) => page.hasLocalizedContent)
       .map((page) => page.data.slug);
 
