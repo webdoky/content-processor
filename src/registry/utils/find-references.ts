@@ -2,14 +2,14 @@ import { visit } from 'unist-util-visit';
 import { HtmlNode } from './interfaces';
 
 const findReferences = (ast) => {
-  const references = new Set();
+  const references = [];
 
   visit(
     ast,
     (node: HtmlNode) => node.tagName === 'a',
     (node) => {
       if (node.properties && node.properties.href) {
-        references.add(node.properties.href);
+        references.push(node.properties.href);
       }
     },
   );

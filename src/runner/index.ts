@@ -14,6 +14,17 @@ interface LocalRunnerOptions {
   pathToCache: string;
 }
 
+const trimHash = (url: string) => url.split('#')[0];
+
+const existingSectionsUrls = [
+  '/uk/docs/web/javascript/',
+  '/uk/docs/web/html/',
+  '/uk/docs/web/css/',
+  '/uk/docs/web/svg/',
+  '/uk/docs/web/guide/',
+  '/uk/docs/glossary/',
+];
+
 export type RunnerOptions = RegistryInitOptions & LocalRunnerOptions;
 
 export default class Runner {
@@ -87,12 +98,13 @@ export default class Runner {
       sourceRegistry,
     } = this;
     let orphanedLinksCount = 0;
+    const countsByPage: { [key: string]: number } = {};
 
     for (const page of sourceRegistry.getPagesData()) {
-      const { path, references } = page;
+      const { path, referencesAll, referencesFixable } = page;
 
       // Check if links in the content lead to sensible destinations
-      references.forEach((refItem) => {
+      referencesFixable.forEach((refItem: string) => {
         if (
           !isExternalLink(refItem) &&
           !translatedInternalDests.has(refItem) &&
@@ -101,17 +113,47 @@ export default class Runner {
           orphanedLinksCount++;
           console.warn(
             '\x1b[33mwarn\x1b[0m',
-            `- found orphaned reference: ${refItem} on page ${path}`,
+            `- found fixable reference: ${refItem} on page ${path}`,
           );
+        }
+      });
+
+      referencesAll.forEach((refItem: string) => {
+        if (!isExternalLink(refItem) && !translatedInternalDests.has(refItem)) {
+          const normalizedReference = trimHash(refItem);
+          const currentRefCount = countsByPage[normalizedReference] || 0;
+          countsByPage[normalizedReference] = currentRefCount + 1;
         }
       });
     }
 
     if (orphanedLinksCount > 0) {
       console.warn(
-        `\x1b[33mfound ${orphanedLinksCount} orphaned reference${
+        `\x1b[33mfound ${orphanedLinksCount} fixable orphaned reference${
           orphanedLinksCount > 1 ? 's' : ''
-        }\x1b[0m`,
+        } \x1b[0m`,
+      );
+    }
+
+    const urlsInScope: Array<[string, number]> = Object.entries(
+      countsByPage,
+    ).filter(([url]) => {
+      const normalizedUrl = url.toLowerCase();
+      return existingSectionsUrls.some((urlPrefix) =>
+        normalizedUrl.includes(urlPrefix),
+      );
+    });
+
+    if (urlsInScope.length) {
+      urlsInScope.sort(([_a, countA], [_b, countB]) => countB - countA);
+
+      console.log(
+        `Summary: ${urlsInScope.length} orphaned URLs found${
+          urlsInScope.length > 100 ? ', showing top 100 of them' : ''
+        }\n`,
+        ...urlsInScope
+          .slice(0, 100)
+          .map(([url, count], index) => `№${index + 1}. ${url} – ${count}\n`),
       );
     }
   }
