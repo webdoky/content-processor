@@ -5,5 +5,8 @@
  * @returns {string} Text without slashes on ends, e.g. Web/HTML/Element
  */
 export default function trimSlashes(s: string): string {
+  if (!s) {
+    return '';
+  }
   return s.replace(/^\//, '').replace('//$/', '');
 }
