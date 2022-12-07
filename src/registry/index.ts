@@ -241,9 +241,6 @@ class Registry {
         hasLocalizedContent,
         ...otherPageData
       } = pageData;
-      if (hasLocalizedContent) {
-        console.info('hasLocalizedContent', slug);
-      }
 
       const { content, data: processedData } = runMacros(
         rawContent,

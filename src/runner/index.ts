@@ -123,8 +123,11 @@ export default class Runner {
       });
 
       referencesAll.forEach((refItem: string) => {
-        if (!isExternalLink(refItem) && !translatedInternalDests.has(refItem)) {
-          const normalizedReference = trimHash(refItem).replace(/\/$/, '');
+        const normalizedReference = trimHash(refItem);
+        if (
+          !isExternalLink(refItem) &&
+          !translatedInternalDests.has(normalizedReference)
+        ) {
           const currentRefCount = countsByPage[normalizedReference] || 0;
           countsByPage[normalizedReference] = currentRefCount + 1;
         }
