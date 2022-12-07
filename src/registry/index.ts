@@ -2,6 +2,8 @@ import { promises as fs } from 'fs';
 
 import parseFrontMatter from 'gray-matter';
 
+import trimSlashes from '../utils/trim-slashes';
+
 import {
   createHtmlParser,
   createHtmlPostProcessor,
@@ -100,10 +102,16 @@ class Registry {
     return Array.from(this.contentPages.entries());
   }
 
-  getChildren(slug: string) {
-    return this.#getAllSlugs()
-      .filter((slugKey) => slugKey.startsWith(slug) && slugKey !== slug)
-      .map((slugKey) => this.contentPages.get(slugKey));
+  getChildren(slug: string, includeNested = true) {
+    let childrenSlugs = this.#getAllSlugs().filter(
+      (slugKey) => slugKey.startsWith(slug) && slugKey !== slug,
+    );
+    if (!includeNested) {
+      childrenSlugs = childrenSlugs.filter(
+        (childSlug) => !trimSlashes(childSlug.split(slug).at(-1)).includes('/'),
+      );
+    }
+    return childrenSlugs.map((slugKey) => this.getPageBySlug(slugKey));
   }
 
   getPagesData() {
@@ -118,10 +126,12 @@ class Registry {
     return Array.from(this.liveSamples.values());
   }
 
-  hasPage(path: string): boolean {
-    const page = this.getPageBySlug(path);
-
-    return !!page?.slug;
+  hasPage(slug: string, localizedOnly = false): boolean {
+    if (localizedOnly) {
+      const page = this.getPageBySlug(slug);
+      return !!page?.hasLocalizedContent;
+    }
+    return this.contentPages.has(slug);
   }
 
   async init() {
