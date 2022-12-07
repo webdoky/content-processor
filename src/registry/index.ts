@@ -303,7 +303,7 @@ class Registry {
       const {
         headings = [],
         fragments = new Set(),
-        references = new Set<string>(),
+        references = [],
         description: rawDescription,
       } = this.extractParts(content);
 
@@ -350,26 +350,28 @@ class Registry {
         );
       }
 
+      const normalizedReferences = hasLocalizedContent
+        ? references
+            .filter((item) => item !== '#on-github') // this is an external widget, unavailable in content
+            .map((item: string) => normalizeReference(item, path))
+        : [];
+
       this.contentPages.set(slug, {
         content: hasLocalizedContent ? content : '',
         hasLocalizedContent,
         headings,
-        references: hasLocalizedContent
-          ? Array.from(references)
-              .filter((item) => item !== '#on-github') // this is an external widget, unavailable in content
-              .map((item: string) => normalizeReference(item, path))
-              .filter((ref) => {
-                if (ref.startsWith('http://') || ref.startsWith('http://')) {
-                  return true;
-                }
+        referencesAll: normalizedReferences,
+        referencesFixable: normalizedReferences.filter((ref) => {
+          if (ref.startsWith('http://') || ref.startsWith('http://')) {
+            return true;
+          }
 
-                let [path] = ref.split('#');
-                if (path.endsWith('/')) {
-                  path = path.slice(0, path.length - 1);
-                }
-                return this.existingInternalDestinations.has(path);
-              })
-          : [],
+          let [path] = ref.split('#');
+          if (path.endsWith('/')) {
+            path = path.slice(0, path.length - 1);
+          }
+          return this.existingInternalDestinations.has(path);
+        }),
         description: processedDescription,
         ...otherPageData,
       });
