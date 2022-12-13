@@ -10,6 +10,7 @@ const start = async () => {
     pathToCache: `${baseDir}/cache/`,
     sourceLocale: 'en-US',
     targetLocale: 'uk',
+    redirectMap: {},
   });
 
   await runner.init();

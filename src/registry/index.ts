@@ -73,6 +73,7 @@ export interface RegistryInitOptions {
   pathToOriginalContent: string;
   targetLocale: string;
   pathToLocalizedContent: string;
+  redirectMap?: Record<string, string>;
 }
 
 class Registry {
@@ -390,6 +391,7 @@ class Registry {
 
     const htmlPostProcessor = createHtmlPostProcessor({
       existingLinks: Array.from(this.existingInternalDestinations),
+      redirectMap: this._options.redirectMap || {},
     });
 
     for (const slug of contentfulPagesSlugs) {
@@ -537,7 +539,7 @@ class Registry {
     const linkedContentAst = await mdParseAndProcess.run(parsedInput);
     const processedRehypeAst = await htmlProcess.run(linkedContentAst as any); // TODO: type AST transformations
 
-    return htmlProcess.stringify(processedRehypeAst as any);
+    return htmlProcess.stringify(processedRehypeAst);
   };
 
   // TODO: seems unused now
