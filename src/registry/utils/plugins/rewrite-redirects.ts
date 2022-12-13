@@ -1,5 +1,5 @@
 import { visit } from 'unist-util-visit';
-import { HtmlNode } from './interfaces';
+import { HtmlNode } from '../interfaces';
 
 interface Options {
   redirectMap?: Record<string, string>;
@@ -15,10 +15,13 @@ const rewriteRedirects = (options: Options) => {
       tree,
       (node: HtmlNode) => !!(node.tagName === 'a' && node.properties?.href),
       (node: HtmlNode) => {
-        const href = node.properties?.href;
+        const href = node.properties.href;
+        const [path, hash] = href.split('#');
 
-        if (references.length && redirectMap[href]) {
-          node.properties.href = redirectMap[href];
+        if (references.length && path && redirectMap[path]) {
+          node.properties.href = `${redirectMap[path]}${
+            hash ? `#${hash}` : ''
+          }`;
         }
       },
     );

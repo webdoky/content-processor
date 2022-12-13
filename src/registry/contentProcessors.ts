@@ -14,6 +14,7 @@ import addTableScroll from './utils/plugins/table-scroll';
 import cleanupCodeSamples from './utils/plugins/cleanup-code-samples';
 import { list } from './mdast/list';
 import { code } from './mdast/code';
+import rewriteRedirects from './utils/plugins/rewrite-redirects';
 
 export function createHtmlParser() {
   return unified().use(rehypeParse, { fragment: true });
@@ -29,11 +30,13 @@ export const htmlParseAndProcess = createHtmlParser()
 
 interface HtmlPostProcessorOptions {
   existingLinks: string[];
+  redirectMap: Record<string, string>;
 }
 
 export const createHtmlPostProcessor = (options: HtmlPostProcessorOptions) => {
   return createHtmlParser()
     .use([[checkLinksToMissingTranslations, options]])
+    .use([[rewriteRedirects, options]])
     .use(rehypeStringify, { allowDangerousHtml: true });
 };
 

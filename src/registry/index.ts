@@ -1,7 +1,6 @@
 import { promises as fs } from 'fs';
 
 import parseFrontMatter from 'gray-matter';
-import { Root } from 'rehype-parse/lib';
 
 import {
   createHtmlParser,
@@ -21,7 +20,6 @@ import findHeadings from './utils/find-headings';
 import findReferences from './utils/find-references';
 import { getNewCommits } from './utils/git-commit-data';
 import walk from './utils/walk';
-import rewriteRedirects from './utils/rewrite-redirects';
 
 /**
  * Transforms a list of paths to content files
@@ -359,6 +357,7 @@ class Registry {
 
     const htmlPostProcessor = createHtmlPostProcessor({
       existingLinks: Array.from(this.existingInternalDestinations),
+      redirectMap: this._options.redirectMap || {},
     });
 
     for (const slug of contentfulPagesSlugs) {
@@ -505,9 +504,8 @@ class Registry {
 
     const linkedContentAst = await mdParseAndProcess.run(parsedInput);
     const processedRehypeAst = await htmlProcess.run(linkedContentAst as any); // TODO: type AST transformations
-    const postProcessedAst = this.postProcessHtmlContent(processedRehypeAst);
 
-    return htmlProcess.stringify(postProcessedAst);
+    return htmlProcess.stringify(processedRehypeAst);
   };
 
   // TODO: seems unused now
@@ -516,18 +514,9 @@ class Registry {
 
     const linkedContentAst = await htmlParseAndProcess.run(parsedInputAst);
     const processedHtmlAst = await htmlProcess.run(linkedContentAst);
-    const postProcessedAst = this.postProcessHtmlContent(processedHtmlAst);
 
-    return htmlProcess.stringify(postProcessedAst);
+    return htmlProcess.stringify(processedHtmlAst);
   }
-
-  postProcessHtmlContent = (ast: Root): Root => {
-    const { redirectMap } = this._options;
-
-    rewriteRedirects({ redirectMap })(ast);
-
-    return ast;
-  };
 }
 
 export default Registry;
