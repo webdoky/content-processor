@@ -35,8 +35,8 @@ interface HtmlPostProcessorOptions {
 
 export const createHtmlPostProcessor = (options: HtmlPostProcessorOptions) => {
   return createHtmlParser()
-    .use([[checkLinksToMissingTranslations, options]])
     .use([[rewriteRedirects, options]])
+    .use([[checkLinksToMissingTranslations, options]])
     .use(rehypeStringify, { allowDangerousHtml: true });
 };
 
