@@ -20,5 +20,3 @@ const redirects: [string, string][] = redirectsData
   .map(([from, to]) => [translatePathname(from), translatePathname(to)]);
 
 export default redirects;
-
-console.info(JSON.stringify(redirects, null, 2));
