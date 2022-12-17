@@ -2,6 +2,8 @@ import { promises as fs } from 'fs';
 
 import parseFrontMatter from 'gray-matter';
 
+import trimSlashes from '../utils/trim-slashes';
+
 import {
   createHtmlParser,
   createHtmlPostProcessor,
@@ -93,8 +95,28 @@ class Registry {
     this._options = options;
   }
 
+  #getAllSlugs() {
+    return Array.from(this.contentPages.keys());
+  }
+
+  #getPagesEntries() {
+    return Array.from(this.contentPages.entries());
+  }
+
+  getChildren(slug: string, includeNested = true) {
+    let childrenSlugs = this.#getAllSlugs().filter(
+      (slugKey) => slugKey.startsWith(slug) && slugKey !== slug,
+    );
+    if (!includeNested) {
+      childrenSlugs = childrenSlugs.filter(
+        (childSlug) => !trimSlashes(childSlug.split(slug).at(-1)).includes('/'),
+      );
+    }
+    return childrenSlugs.map((slugKey) => this.getPageBySlug(slugKey));
+  }
+
   getPagesData() {
-    return this.contentPages.values();
+    return Array.from(this.contentPages.values());
   }
 
   getPageBySlug(slug: string) {
@@ -103,6 +125,14 @@ class Registry {
 
   getLiveSamples() {
     return Array.from(this.liveSamples.values());
+  }
+
+  hasPage(slug: string, localizedOnly = false): boolean {
+    if (localizedOnly) {
+      const page = this.getPageBySlug(slug);
+      return !!page?.hasLocalizedContent;
+    }
+    return this.contentPages.has(slug);
   }
 
   async init() {
@@ -145,6 +175,10 @@ class Registry {
     const localizedContentPages = await walk(
       `${pathToLocalizedContent}/${targetLocale.toLowerCase()}`,
     );
+
+    if (localizedContentPages.length === 0) {
+      throw new Error('localized content not found');
+    }
 
     this.localizedContentMap = generateSlugToPathMap(
       localizedContentPages,
@@ -199,11 +233,11 @@ class Registry {
     //
     console.log('Initial registry is ready, expanding macros:');
 
-    for (const [slug, pageData] of this.contentPages) {
+    for (const [slug, pageData] of this.#getPagesEntries()) {
       const {
         content: rawContent,
         data,
-        data: { 'browser-compat': browserCompat, title },
+        data: { 'browser-compat': browserCompat, tags, title },
         path,
         hasLocalizedContent,
         ...otherPageData
@@ -216,6 +250,7 @@ class Registry {
             browserCompat,
             path,
             slug,
+            tags,
             targetLocale,
             title,
           },
@@ -249,7 +284,7 @@ class Registry {
       `Done with macros, ${this.expandedMacrosFor} processed.\nRendering pages:`,
     );
 
-    for (const [slug, pageData] of this.contentPages) {
+    for (const [slug, pageData] of this.#getPagesEntries()) {
       const {
         hasLocalizedContent,
         content: rawContent,
@@ -258,15 +293,13 @@ class Registry {
       } = pageData;
       const {
         path,
-        data: { 'browser-compat': browserCompat, title },
+        data: { 'browser-compat': browserCompat, tags, title },
       } = pageData;
-
       const sourceProcessor =
         sourceType === 'html' ? this.processHtmlPage : this.processMdPage;
       const content = await sourceProcessor(rawContent);
-
       const {
-        headings,
+        headings = [],
         fragments = new Set(),
         references = [],
         description: rawDescription,
@@ -279,6 +312,7 @@ class Registry {
             browserCompat,
             path,
             slug,
+            tags,
             targetLocale,
             title,
           },
@@ -351,7 +385,7 @@ class Registry {
       `Initial registry is ready, ${this.pagePostProcessedAmount} pages processed`,
     );
 
-    const contentfulPagesSlugs = Array.from(this.contentPages.values())
+    const contentfulPagesSlugs = this.getPagesData()
       .filter((page) => page.hasLocalizedContent)
       .map((page) => page.data.slug);
 
