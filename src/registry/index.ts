@@ -149,7 +149,8 @@ interface SidebarNavLink {
 interface SidebarSection {
   title: string;
   expanded: boolean;
-  items: SidebarNavLink[];
+  items?: SidebarNavLink[];
+  links?: SidebarNavLink[];
   sections?: SidebarSection[];
 }
 
@@ -496,6 +497,12 @@ class Registry {
     const checkNavSectionLinks = (section: SidebarSection) => {
       if (section.items) {
         section.items.forEach((navLink) => {
+          const { path } = navLink;
+          navLink.hasLocalizedContent = translatedPagesUrls.has(path);
+        });
+      }
+      if (section.links) {
+        section.links.forEach((navLink) => {
           const { path } = navLink;
           navLink.hasLocalizedContent = translatedPagesUrls.has(path);
         });
