@@ -186,7 +186,6 @@ export default class Runner {
     const mainIndexFilePath = path.resolve(pathToCache, mainIndexFile);
 
     console.log(mainIndexFilePath, 'writing to file');
-    // console.info(JSON.stringify(indexData, null, 2));
     if (indexData.length === 0) {
       throw new Error('Index is empty');
     }
