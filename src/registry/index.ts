@@ -22,6 +22,10 @@ import findHeadings from './utils/find-headings';
 import findReferences from './utils/find-references';
 import { getNewCommits } from './utils/git-commit-data';
 import walk from './utils/walk';
+import { SerializedMetaMacro } from '../runner/interfaces';
+import { Heading } from './utils/find-headings';
+import { pick } from 'lodash-es';
+import trimHash from '../utils/trim-hash';
 
 /**
  * Transforms a list of paths to content files
@@ -52,6 +56,20 @@ const generateSlugToPathMap = (
   return map;
 };
 
+const parsePageMatter = (
+  input: string | Buffer,
+): { content: string; data: PageFrontMatter } => {
+  const { data, content } = parseFrontMatter(input);
+
+  return {
+    data: pick(data, ['browser-compat', 'title', 'tags', 'slug']),
+    content,
+  };
+};
+
+const removeTrailingSlash = (url: string) =>
+  url.endsWith('/') ? url.slice(0, url.length - 1) : url;
+
 const normalizeReference = (ref = '', pagePath = '') => {
   if (ref.startsWith('#')) {
     // just anchor
@@ -76,10 +94,71 @@ export interface RegistryInitOptions {
   redirectMap?: Record<string, string>;
 }
 
+type SourceType = 'md' | 'html';
+
+interface PageFrontMatter {
+  'browser-compat': string;
+  title: string;
+  tags: string[];
+  slug: string;
+}
+
+// TODO: this interface definitely needs cleanup
+interface InternalPageData {
+  content: string;
+  description: string;
+  hasContent: boolean;
+  headings: Heading[];
+  path: string;
+  originalPath: string;
+  updatesInOriginalRepo: string[];
+  section: string;
+  sourceLastUpdatedAt?: number;
+  translationLastUpdatedAt?: string;
+  macros?: SerializedMetaMacro[];
+
+  data: PageFrontMatter & {
+    macros?: SerializedMetaMacro[];
+  };
+
+  // data fields
+  title: string;
+  slug: string;
+  tags: string[];
+  browserCompat: string;
+
+  // internal fields
+  hasLocalizedContent: boolean;
+  referencesAll: string[];
+  referencesFixable: string[];
+  sourceType?: SourceType;
+}
+
+enum MetaMacros {
+  cssref = 'cssref',
+  jsref = 'jsref',
+  jssidebar = 'jssidebar',
+}
+
+interface SidebarNavLink {
+  hasLocalizedContent?: boolean;
+  path: string;
+  title: string;
+}
+
+interface SidebarSection {
+  title: string;
+  expanded: boolean;
+  items: SidebarNavLink[];
+  sections?: SidebarSection[];
+}
+
+type NavigationMacroData = SidebarSection[];
+
 class Registry {
   _options?: RegistryInitOptions;
   localizedContentMap?: Map<string, string>;
-  contentPages = new Map();
+  contentPages: Map<string, Partial<InternalPageData>> = new Map();
   liveSamples?: Set<ExtractedSample> = new Set();
   existingInternalDestinations: Set<string> = new Set();
   unlocalizedInternalDests: Set<string> = new Set();
@@ -394,6 +473,7 @@ class Registry {
       redirectMap: this._options.redirectMap || {},
     });
 
+    // post process pages' content
     for (const slug of contentfulPagesSlugs) {
       const page = this.contentPages.get(slug);
 
@@ -405,6 +485,38 @@ class Registry {
       });
     }
 
+    // post process pages metadata
+
+    const translatedPagesUrls = new Set(
+      Array.from(this.translatedInternalDests.values())
+        .map(trimHash)
+        .map(removeTrailingSlash),
+    );
+
+    const checkNavSectionLinks = (section: SidebarSection) => {
+      if (section.items) {
+        section.items.forEach((navLink) => {
+          const { path } = navLink;
+          navLink.hasLocalizedContent = translatedPagesUrls.has(path);
+        });
+      }
+      if (section.sections) {
+        section.sections.forEach(checkNavSectionLinks);
+      }
+    };
+
+    for (const page of this.getPagesData()) {
+      (page.data.macros || []).forEach((metaMacroData) => {
+        const { macro, result } = metaMacroData;
+        if (Object.values(MetaMacros).includes(macro as MetaMacros)) {
+          const structure = JSON.parse(result) as NavigationMacroData;
+
+          structure.forEach(checkNavSectionLinks);
+
+          metaMacroData.result = JSON.stringify(structure);
+        }
+      });
+    }
     console.log(
       `Content has been rendered, ${contentfulPagesSlugs.length} pages with content processed`,
     );
@@ -505,10 +617,14 @@ class Registry {
     );
   }
 
-  async readContentPage(path) {
+  async readContentPage(path): Promise<{
+    content: string;
+    data: PageFrontMatter;
+    sourceType: SourceType;
+  }> {
     const input = await fs.readFile(path);
 
-    const { data, content } = parseFrontMatter(input);
+    const { data, content } = parsePageMatter(input);
 
     return {
       content,

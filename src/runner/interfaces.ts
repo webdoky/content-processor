@@ -14,6 +14,11 @@ export interface MainIndexData {
   hasContent: boolean;
 }
 
+export interface SerializedMetaMacro {
+  macro: string;
+  result: string;
+}
+
 export interface PageData {
   content: string;
   description: string;
@@ -23,12 +28,12 @@ export interface PageData {
   originalPath: string;
   updatesInOriginalRepo: string[];
   section: string;
-  sourceLastUpdatetAt?: number;
+  sourceLastUpdatedAt?: number;
   translationLastUpdatedAt?: string;
+  macros?: SerializedMetaMacro[];
 
   // data fields
   title: string;
   slug: string;
   tags: string[];
-  browserCompat: string;
 }

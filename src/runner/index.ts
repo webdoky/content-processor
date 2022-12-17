@@ -3,6 +3,7 @@ import rimraf from 'rimraf';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { MainIndexData, PageData } from './interfaces';
+import trimHash from '../utils/trim-hash';
 
 const mainIndexFile = 'mainIndex.json';
 const articlesDir = 'files/';
@@ -13,8 +14,6 @@ const isExternalLink = (ref) =>
 interface LocalRunnerOptions {
   pathToCache: string;
 }
-
-const trimHash = (url: string) => url.split('#')[0];
 
 const existingSectionsUrls = [
   '/uk/docs/web/javascript/',
