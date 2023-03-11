@@ -1,4 +1,4 @@
-import { Node } from 'unist-util-visit';
+import { Node } from 'unist';
 
 export type HtmlNode = Node & {
   type: string;

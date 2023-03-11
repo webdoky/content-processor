@@ -4,10 +4,26 @@ import Context from './context';
 const { macros: Macros, parseMacroArgs, extractMacros } = kuma;
 
 // List of macros that should be processed anyway, i.e for rendering navigation
-const navigationalMacros = ['cssref', 'jssidebar', 'jsref'];
+const navigationalMacros = ['cssref', 'jssidebar', 'jsref', 'htmlref'];
+
+const UNESCAPED_BACKTICK_MATCH = /([^\\])`/g;
+const UNESCAPED_SINGLE_QUOTE_MATCH = /([^\\])'/g;
+
+/**
+ * Some macros, or their output may contain symbols, which may be considered
+ * part of markdown syntax, so we have to additionally escape them.
+ *
+ * @param content string
+ * @returns string
+ */
+const escapeMarkdownCharacters = (content: string) => {
+  return content
+    .replaceAll(UNESCAPED_BACKTICK_MATCH, '$1\\`')
+    .replaceAll(UNESCAPED_SINGLE_QUOTE_MATCH, "$1\\'");
+};
 
 export const runMacros = (
-  content,
+  content: string,
   context: Context,
   navigationOnly = false,
 ) => {
@@ -80,14 +96,19 @@ export const runMacros = (
       }
       if (result !== match) {
         // don't spend processor cycles on replacing the same strings
-        resultContent = resultContent.replace(match, result);
+        resultContent = resultContent.replace(
+          match,
+          escapeMarkdownCharacters(result),
+        );
       }
     }
   });
 
   const numberOfFailedMacros = Object.keys(failedMacros).length;
   if (numberOfFailedMacros) {
-    console.warn(`Got ${numberOfFailedMacros} failed macros`);
+    console.warn(
+      `${context.env.path}: got ${numberOfFailedMacros} failed macros`,
+    );
     Object.entries(failedMacros).forEach(([functionName, entry]: any) => {
       console.warn(
         `\x1b[33m${entry.count} failed ${functionName} macros, the last expression was: ${entry.lastUsedExpression}, message: ${entry.lastMessage}\x1b[0m`,

@@ -40,8 +40,17 @@ test('Macros runner should output valid html', async (t) => {
       {
         browserCompat: 'javascript.builtins.String.blink',
         path: 'testPath',
-
         slug: 'testSlug',
+        tags: [
+          'Deprecated',
+          'HTML wrapper methods',
+          'JavaScript',
+          'Method',
+          'Prototype',
+          'Reference',
+          'String',
+          'Polyfill',
+        ],
         targetLocale: 'uk',
         title: 'Test page',
       },
@@ -66,6 +75,16 @@ test('Macros runner should output valid html', async (t) => {
         browserCompat: 'javascript.builtins.String.blink',
         path: 'testPath',
         slug: 'testSlug',
+        tags: [
+          'Deprecated',
+          'HTML wrapper methods',
+          'JavaScript',
+          'Method',
+          'Prototype',
+          'Reference',
+          'String',
+          'Polyfill',
+        ],
         targetLocale: 'uk',
         title: 'Test page',
       },
@@ -81,5 +100,56 @@ test('Macros runner should output valid html', async (t) => {
   t.assert(
     t.deepEqual(expandedMacrosSample, processedContent),
     'Macros should correctly work with HTML content (at least in the descriptions)',
+  );
+});
+
+const rawMarkdownWithBackticksInMacros =
+  `  - {{JSxRef("RegExp.lastParen", "RegExp.lastParen ($+)")}} {{deprecated_inline}}
+    - : Статична властивість лише для зчитування, що містить останній збіг підрядку в дужках.
+  - {{JSxRef("RegExp.leftContext", "RegExp.leftContext ($\`)")}} {{deprecated_inline}}
+    - : Статична властивість лише для зчитування, що містить підрядок, котрий передував останньому збігові.
+  - {{JSxRef("RegExp.rightContext", "RegExp.rightContext ($')")}} {{deprecated_inline}}
+    - : Статична властивість лише для зчитування, що містить підрядок, котрий стояв після останнього збігу.`;
+const processedMarkdownWithBackticksInMacros =
+  `  - <a href="/uk/docs/Web/JavaScript/Reference/Global_Objects/RegExp/lastParen"><code>RegExp.lastParen ($+)</code></a> <span class="badge__inline" title="Цей застарілий API більше не повинен використовуватись, хоча ймовірно ще працюватиме."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm-8 5v6h2v-6H9zm4 0v6h2v-6h-2zM9 4v2h6V4H9z"/></svg></span>
+    - : Статична властивість лише для зчитування, що містить останній збіг підрядку в дужках.
+  - <a href="/uk/docs/Web/JavaScript/Reference/Global_Objects/RegExp/leftContext"><code>RegExp.leftContext ($\\\`)</code></a> <span class="badge__inline" title="Цей застарілий API більше не повинен використовуватись, хоча ймовірно ще працюватиме."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm-8 5v6h2v-6H9zm4 0v6h2v-6h-2zM9 4v2h6V4H9z"/></svg></span>
+    - : Статична властивість лише для зчитування, що містить підрядок, котрий передував останньому збігові.
+  - <a href="/uk/docs/Web/JavaScript/Reference/Global_Objects/RegExp/rightContext"><code>RegExp.rightContext ($\\\')</code></a> <span class="badge__inline" title="Цей застарілий API більше не повинен використовуватись, хоча ймовірно ще працюватиме."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm-8 5v6h2v-6H9zm4 0v6h2v-6h-2zM9 4v2h6V4H9z"/></svg></span>
+    - : Статична властивість лише для зчитування, що містить підрядок, котрий стояв після останнього збігу.`;
+
+test('Macros runner should escape backticks and single quotes in output before giving it to markdown parser', async (t) => {
+  const { content: processedRawContent } = runMacros(
+    rawMarkdownWithBackticksInMacros,
+    new Context(
+      {
+        browserCompat: 'javascript.builtins.String.blink',
+        path: 'testPath',
+        slug: 'testSlug',
+        tags: [
+          'Deprecated',
+          'HTML wrapper methods',
+          'JavaScript',
+          'Method',
+          'Prototype',
+          'Reference',
+          'String',
+          'Polyfill',
+        ],
+        targetLocale: 'uk',
+        title: 'Test page',
+      },
+      new Registry({
+        pathToLocalizedContent: 'external/translated-content/files',
+        pathToOriginalContent: 'external/original-content/files',
+        sourceLocale: 'en-US',
+        targetLocale: 'uk',
+      }),
+    ),
+  );
+
+  t.assert(
+    t.deepEqual(processedMarkdownWithBackticksInMacros, processedRawContent),
+    'Macros should correctly work with raw markdown',
   );
 });
