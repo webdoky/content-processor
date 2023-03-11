@@ -3,8 +3,8 @@ import rimraf from 'rimraf';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { MainIndexData, PageData } from './interfaces';
-import redirects from '../registry/redirects';
 import trimHash from '../utils/trim-hash';
+import translatePathname from './translate-pathname';
 
 const mainIndexFile = 'mainIndex.json';
 const articlesDir = 'files/';
@@ -32,6 +32,7 @@ export default class Runner {
   indexData: MainIndexData[];
   pagesData: PageData[];
   pathToCache: string;
+  registryOptions: RegistryInitOptions;
 
   constructor(options: RunnerOptions) {
     const { pathToCache, ...registryOptions } = options;
@@ -40,6 +41,7 @@ export default class Runner {
     this.sourceRegistry = new Registry(registryOptions);
     this.indexData = [];
     this.pagesData = [];
+    this.registryOptions = registryOptions;
   }
 
   async init() {
@@ -100,9 +102,18 @@ export default class Runner {
     const {
       sourceRegistry: { translatedInternalDests, unlocalizedInternalDests },
       sourceRegistry,
+      registryOptions: { redirectMap = {}, sourceLocale, targetLocale },
     } = this;
     let orphanedLinksCount = 0;
     const countsByPage: { [key: string]: number } = {};
+    const localeTranslationOptions = { sourceLocale, targetLocale };
+
+    const redirects: [string, string][] = Object.entries(redirectMap)
+      .filter(([from, to]) => from && to)
+      .map(([from, to]) => [
+        translatePathname(from, localeTranslationOptions),
+        translatePathname(to, localeTranslationOptions),
+      ]);
 
     for (const page of sourceRegistry.getPagesData()) {
       const { path, referencesAll, referencesFixable } = page;
