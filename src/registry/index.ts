@@ -2,6 +2,8 @@ import { promises as fs } from 'fs';
 
 import parseFrontMatter from 'gray-matter';
 
+import trimSlashes from '../utils/trim-slashes';
+
 import {
   createHtmlParser,
   createHtmlPostProcessor,
@@ -20,6 +22,10 @@ import findHeadings from './utils/find-headings';
 import findReferences from './utils/find-references';
 import { getNewCommits } from './utils/git-commit-data';
 import walk from './utils/walk';
+import { SerializedMetaMacro } from '../runner/interfaces';
+import { Heading } from './utils/find-headings';
+import { pick } from 'lodash-es';
+import trimHash from '../utils/trim-hash';
 
 /**
  * Transforms a list of paths to content files
@@ -50,6 +56,20 @@ const generateSlugToPathMap = (
   return map;
 };
 
+const parsePageMatter = (
+  input: string | Buffer,
+): { content: string; data: PageFrontMatter } => {
+  const { data, content } = parseFrontMatter(input);
+
+  return {
+    data: pick(data, ['browser-compat', 'title', 'tags', 'slug']),
+    content,
+  };
+};
+
+const removeTrailingSlash = (url: string) =>
+  url.endsWith('/') ? url.slice(0, url.length - 1) : url;
+
 const normalizeReference = (ref = '', pagePath = '') => {
   if (ref.startsWith('#')) {
     // just anchor
@@ -74,10 +94,72 @@ export interface RegistryInitOptions {
   redirectMap?: Record<string, string>;
 }
 
+type SourceType = 'md' | 'html';
+
+interface PageFrontMatter {
+  'browser-compat': string;
+  title: string;
+  tags: string[];
+  slug: string;
+}
+
+// TODO: this interface definitely needs cleanup
+interface InternalPageData {
+  content: string;
+  description: string;
+  hasContent: boolean;
+  headings: Heading[];
+  path: string;
+  originalPath: string;
+  updatesInOriginalRepo: string[];
+  section: string;
+  sourceLastUpdatedAt?: number;
+  translationLastUpdatedAt?: string;
+  macros?: SerializedMetaMacro[];
+
+  data: PageFrontMatter & {
+    macros?: SerializedMetaMacro[];
+  };
+
+  // data fields
+  title: string;
+  slug: string;
+  tags: string[];
+  browserCompat: string;
+
+  // internal fields
+  hasLocalizedContent: boolean;
+  referencesAll: string[];
+  referencesFixable: string[];
+  sourceType?: SourceType;
+}
+
+enum MetaMacros {
+  cssref = 'cssref',
+  jsref = 'jsref',
+  jssidebar = 'jssidebar',
+}
+
+interface SidebarNavLink {
+  hasLocalizedContent?: boolean;
+  path: string;
+  title: string;
+}
+
+interface SidebarSection {
+  title: string;
+  expanded: boolean;
+  items?: SidebarNavLink[];
+  links?: SidebarNavLink[];
+  sections?: SidebarSection[];
+}
+
+type NavigationMacroData = SidebarSection[];
+
 class Registry {
   _options?: RegistryInitOptions;
   localizedContentMap?: Map<string, string>;
-  contentPages = new Map();
+  contentPages: Map<string, Partial<InternalPageData>> = new Map();
   liveSamples?: Set<ExtractedSample> = new Set();
   existingInternalDestinations: Set<string> = new Set();
   unlocalizedInternalDests: Set<string> = new Set();
@@ -93,8 +175,28 @@ class Registry {
     this._options = options;
   }
 
+  #getAllSlugs() {
+    return Array.from(this.contentPages.keys());
+  }
+
+  #getPagesEntries() {
+    return Array.from(this.contentPages.entries());
+  }
+
+  getChildren(slug: string, includeNested = true) {
+    let childrenSlugs = this.#getAllSlugs().filter(
+      (slugKey) => slugKey.startsWith(slug) && slugKey !== slug,
+    );
+    if (!includeNested) {
+      childrenSlugs = childrenSlugs.filter(
+        (childSlug) => !trimSlashes(childSlug.split(slug).at(-1)).includes('/'),
+      );
+    }
+    return childrenSlugs.map((slugKey) => this.getPageBySlug(slugKey));
+  }
+
   getPagesData() {
-    return this.contentPages.values();
+    return Array.from(this.contentPages.values());
   }
 
   getPageBySlug(slug: string) {
@@ -103,6 +205,14 @@ class Registry {
 
   getLiveSamples() {
     return Array.from(this.liveSamples.values());
+  }
+
+  hasPage(slug: string, localizedOnly = false): boolean {
+    if (localizedOnly) {
+      const page = this.getPageBySlug(slug);
+      return !!page?.hasLocalizedContent;
+    }
+    return this.contentPages.has(slug);
   }
 
   async init() {
@@ -145,6 +255,10 @@ class Registry {
     const localizedContentPages = await walk(
       `${pathToLocalizedContent}/${targetLocale.toLowerCase()}`,
     );
+
+    if (localizedContentPages.length === 0) {
+      throw new Error('localized content not found');
+    }
 
     this.localizedContentMap = generateSlugToPathMap(
       localizedContentPages,
@@ -199,11 +313,11 @@ class Registry {
     //
     console.log('Initial registry is ready, expanding macros:');
 
-    for (const [slug, pageData] of this.contentPages) {
+    for (const [slug, pageData] of this.#getPagesEntries()) {
       const {
         content: rawContent,
         data,
-        data: { 'browser-compat': browserCompat, title },
+        data: { 'browser-compat': browserCompat, tags, title },
         path,
         hasLocalizedContent,
         ...otherPageData
@@ -216,6 +330,7 @@ class Registry {
             browserCompat,
             path,
             slug,
+            tags,
             targetLocale,
             title,
           },
@@ -249,7 +364,7 @@ class Registry {
       `Done with macros, ${this.expandedMacrosFor} processed.\nRendering pages:`,
     );
 
-    for (const [slug, pageData] of this.contentPages) {
+    for (const [slug, pageData] of this.#getPagesEntries()) {
       const {
         hasLocalizedContent,
         content: rawContent,
@@ -258,15 +373,13 @@ class Registry {
       } = pageData;
       const {
         path,
-        data: { 'browser-compat': browserCompat, title },
+        data: { 'browser-compat': browserCompat, tags, title },
       } = pageData;
-
       const sourceProcessor =
         sourceType === 'html' ? this.processHtmlPage : this.processMdPage;
       const content = await sourceProcessor(rawContent);
-
       const {
-        headings,
+        headings = [],
         fragments = new Set(),
         references = [],
         description: rawDescription,
@@ -279,6 +392,7 @@ class Registry {
             browserCompat,
             path,
             slug,
+            tags,
             targetLocale,
             title,
           },
@@ -351,7 +465,7 @@ class Registry {
       `Initial registry is ready, ${this.pagePostProcessedAmount} pages processed`,
     );
 
-    const contentfulPagesSlugs = Array.from(this.contentPages.values())
+    const contentfulPagesSlugs = this.getPagesData()
       .filter((page) => page.hasLocalizedContent)
       .map((page) => page.data.slug);
 
@@ -360,6 +474,7 @@ class Registry {
       redirectMap: this._options.redirectMap || {},
     });
 
+    // post process pages' content
     for (const slug of contentfulPagesSlugs) {
       const page = this.contentPages.get(slug);
 
@@ -371,6 +486,44 @@ class Registry {
       });
     }
 
+    // post process pages metadata
+
+    const translatedPagesUrls = new Set(
+      Array.from(this.translatedInternalDests.values())
+        .map(trimHash)
+        .map(removeTrailingSlash),
+    );
+
+    const checkNavSectionLinks = (section: SidebarSection) => {
+      if (section.items) {
+        section.items.forEach((navLink) => {
+          const { path } = navLink;
+          navLink.hasLocalizedContent = translatedPagesUrls.has(path);
+        });
+      }
+      if (section.links) {
+        section.links.forEach((navLink) => {
+          const { path } = navLink;
+          navLink.hasLocalizedContent = translatedPagesUrls.has(path);
+        });
+      }
+      if (section.sections) {
+        section.sections.forEach(checkNavSectionLinks);
+      }
+    };
+
+    for (const page of this.getPagesData()) {
+      (page.data.macros || []).forEach((metaMacroData) => {
+        const { macro, result } = metaMacroData;
+        if (Object.values(MetaMacros).includes(macro as MetaMacros)) {
+          const structure = JSON.parse(result) as NavigationMacroData;
+
+          structure.forEach(checkNavSectionLinks);
+
+          metaMacroData.result = JSON.stringify(structure);
+        }
+      });
+    }
     console.log(
       `Content has been rendered, ${contentfulPagesSlugs.length} pages with content processed`,
     );
@@ -471,10 +624,14 @@ class Registry {
     );
   }
 
-  async readContentPage(path) {
+  async readContentPage(path): Promise<{
+    content: string;
+    data: PageFrontMatter;
+    sourceType: SourceType;
+  }> {
     const input = await fs.readFile(path);
 
-    const { data, content } = parseFrontMatter(input);
+    const { data, content } = parsePageMatter(input);
 
     return {
       content,
