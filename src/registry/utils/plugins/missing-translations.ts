@@ -1,5 +1,5 @@
 import { visit } from 'unist-util-visit';
-import lodash from 'lodash';
+import { uniq } from 'lodash-es';
 import { HtmlNode } from '../interfaces';
 import { BrokenNavLink } from '../../../components/index';
 
@@ -30,9 +30,7 @@ const dropLocale = (url: string) => {
 const checkLinksToMissingTranslations = (options: Options = {}) => {
   const { existingLinks = [] } = options;
 
-  const uniqExistingLinks = lodash.uniq(
-    existingLinks.map(dropHash).map(dropLocale),
-  );
+  const uniqExistingLinks = uniq(existingLinks.map(dropHash).map(dropLocale));
 
   return (tree) => {
     visit(tree, 'element', (node: HtmlNode) => {

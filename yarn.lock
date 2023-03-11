@@ -910,6 +910,18 @@
   dependencies:
     "@types/node" "*"
 
+"@types/lodash-es@^4.17.6":
+  version "4.17.6"
+  resolved "https://registry.yarnpkg.com/@types/lodash-es/-/lodash-es-4.17.6.tgz#c2ed4c8320ffa6f11b43eb89e9eaeec65966a0a0"
+  integrity sha512-R+zTeVUKDdfoRxpAryaQNRKk3105Rrgx2CFRClIgRGaqDTdjsm8h6IYA8ir584W3ePzkZfst5xIgDwYrlh9HLg==
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*":
+  version "4.14.191"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.191.tgz#09511e7f7cba275acd8b419ddac8da9a6a79e2fa"
+  integrity sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==
+
 "@types/lodash@4.14.149":
   version "4.14.149"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.149.tgz#1342d63d948c6062838fbf961012f74d4e638440"
@@ -1023,7 +1035,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/unist@*", "@types/unist@^2.0.0", "@types/unist@^2.0.2", "@types/unist@^2.0.3":
+"@types/unist@*", "@types/unist@^2.0.0", "@types/unist@^2.0.2", "@types/unist@^2.0.3", "@types/unist@^2.0.6":
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/@types/unist/-/unist-2.0.6.tgz#250a7b16c3b91f672a24552ec64678eeb1d3a08d"
   integrity sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==
@@ -1118,10 +1130,10 @@
   resolved "https://registry.yarnpkg.com/@use-it/interval/-/interval-1.0.0.tgz#c42c68f22ca29a0dc929041746373d94496d2b3a"
   integrity sha512-WQFcnSt/xM/mS8ZtJ0ut5lhPrl+V0HDPPcI/J0eUClsfiD+/r8A7IeW/pVcfpSVGWRmN3+WnjNteWuKyWs2WZg==
 
-"@webdoky/yari-ports@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@webdoky/yari-ports/-/yari-ports-3.1.1.tgz#dae57e075ef633921ff0401b79c818bab10705a0"
-  integrity sha512-3rUnsX+JvsBbKcbF8P0DFNGtf5OBFdiq4zWZ4EOdEzU/X28rGBUCFVCVNt7ZcFU7s+I5PGgnaRh68ESQiEB11g==
+"@webdoky/yari-ports@^3.5.0":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/@webdoky/yari-ports/-/yari-ports-3.5.0.tgz#20cd26ef6fa46f0f163361c5114c1c74bf386a21"
+  integrity sha512-XPSaEigu8Dr/V9ZGt32kgzbrovpMQ++c6EZdgOtKweIzYRT5LtPZFMkhwxl8UAJGc7SpiQPfk7c+K7EwCGs3IQ==
   dependencies:
     "@mdn/browser-compat-data" "^4.1.2"
     "@mdn/yari" "^1.7.0"
@@ -5297,6 +5309,11 @@ locate-path@^7.1.0:
   integrity sha512-vJXaRMJgRVD3+cUZs3Mncj2mxpt5mP0EmNOsxRSZRMlbqjvxzDEOIUWXGmavo0ZC9+tNZCBLQ66reA11nbpHZg==
   dependencies:
     p-locate "^6.0.0"
+
+lodash-es@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
+  integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
 
 lodash.capitalize@^4.2.1:
   version "4.2.1"

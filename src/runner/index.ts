@@ -3,6 +3,7 @@ import rimraf from 'rimraf';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { MainIndexData, PageData } from './interfaces';
+import trimHash from '../utils/trim-hash';
 
 const mainIndexFile = 'mainIndex.json';
 const articlesDir = 'files/';
@@ -13,8 +14,6 @@ const isExternalLink = (ref) =>
 interface LocalRunnerOptions {
   pathToCache: string;
 }
-
-const trimHash = (url: string) => url.split('#')[0];
 
 const existingSectionsUrls = [
   '/uk/docs/web/javascript/',
@@ -63,6 +62,10 @@ export default class Runner {
         translationLastUpdatedAt,
       } = page;
 
+      if (!headings) {
+        throw new Error(`No headings for ${data.slug}`);
+      }
+
       this.indexData.push({
         slug: data.slug || '',
         title: data.title || '',
@@ -80,7 +83,7 @@ export default class Runner {
         originalPath,
         updatesInOriginalRepo,
         section,
-        sourceLastUpdatetAt: 0,
+        sourceLastUpdatedAt: 0,
         translationLastUpdatedAt,
       });
     }
@@ -104,7 +107,7 @@ export default class Runner {
       const { path, referencesAll, referencesFixable } = page;
 
       // Check if links in the content lead to sensible destinations
-      referencesFixable.forEach((refItem: string) => {
+      referencesFixable?.forEach?.((refItem: string) => {
         if (
           !isExternalLink(refItem) &&
           !translatedInternalDests.has(refItem) &&
@@ -119,8 +122,11 @@ export default class Runner {
       });
 
       referencesAll.forEach((refItem: string) => {
-        if (!isExternalLink(refItem) && !translatedInternalDests.has(refItem)) {
-          const normalizedReference = trimHash(refItem);
+        const normalizedReference = trimHash(refItem);
+        if (
+          !isExternalLink(refItem) &&
+          !translatedInternalDests.has(normalizedReference)
+        ) {
           const currentRefCount = countsByPage[normalizedReference] || 0;
           countsByPage[normalizedReference] = currentRefCount + 1;
         }
@@ -179,6 +185,12 @@ export default class Runner {
     const mainIndexFilePath = path.resolve(pathToCache, mainIndexFile);
 
     console.log(mainIndexFilePath, 'writing to file');
+    if (indexData.length === 0) {
+      throw new Error('Index is empty');
+    }
+    if (!indexData.some(({ hasContent }) => hasContent)) {
+      throw new Error("Index doesn't have pages with content");
+    }
 
     await fs.writeFile(
       mainIndexFilePath,

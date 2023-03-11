@@ -2,11 +2,9 @@ import classNames from 'classnames';
 import { visit } from 'unist-util-visit';
 import { parse } from 'space-separated-tokens';
 import isAbsoluteUrl from 'is-absolute-url';
-import lodash from 'lodash';
+import { extend } from 'lodash-es';
 
 import isUrlUkrainian from '../is-url-ukrainian';
-
-const { extend } = lodash;
 
 const defaultTarget = '_blank';
 const defaultRel = ['nofollow', 'noopener', 'noreferrer'];
