@@ -16,14 +16,14 @@ interface LocalRunnerOptions {
 
 const trimHash = (url: string) => url.split('#')[0];
 
-const existingSectionsUrls = [
-  '/uk/docs/web/javascript/',
-  '/uk/docs/web/html/',
-  '/uk/docs/web/css/',
-  '/uk/docs/web/svg/',
-  '/uk/docs/web/guide/',
-  '/uk/docs/glossary/',
-];
+// const existingSectionsUrls = [
+//   '/uk/docs/web/javascript/',
+//   '/uk/docs/web/html/',
+//   '/uk/docs/web/css/',
+//   '/uk/docs/web/svg/',
+//   '/uk/docs/web/guide/',
+//   '/uk/docs/glossary/',
+// ];
 
 export type RunnerOptions = RegistryInitOptions & LocalRunnerOptions;
 
@@ -135,14 +135,7 @@ export default class Runner {
       );
     }
 
-    const urlsInScope: Array<[string, number]> = Object.entries(
-      countsByPage,
-    ).filter(([url]) => {
-      const normalizedUrl = url.toLowerCase();
-      return existingSectionsUrls.some((urlPrefix) =>
-        normalizedUrl.includes(urlPrefix),
-      );
-    });
+    const urlsInScope: Array<[string, number]> = Object.entries(countsByPage);
 
     if (urlsInScope.length) {
       urlsInScope.sort(([_a, countA], [_b, countB]) => countB - countA);
