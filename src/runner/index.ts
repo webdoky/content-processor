@@ -3,6 +3,7 @@ import rimraf from 'rimraf';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { MainIndexData, PageData } from './interfaces';
+import redirects from '../registry/redirects';
 import trimHash from '../utils/trim-hash';
 
 const mainIndexFile = 'mainIndex.json';
@@ -125,7 +126,11 @@ export default class Runner {
         const normalizedReference = trimHash(refItem);
         if (
           !isExternalLink(refItem) &&
-          !translatedInternalDests.has(normalizedReference)
+          !translatedInternalDests.has(normalizedReference) &&
+          !redirects.some(
+            ([from, to]) =>
+              from === normalizedReference && translatedInternalDests.has(to),
+          )
         ) {
           const currentRefCount = countsByPage[normalizedReference] || 0;
           countsByPage[normalizedReference] = currentRefCount + 1;
