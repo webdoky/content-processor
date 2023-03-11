@@ -1,7 +1,11 @@
+import classNames from 'classnames';
 import { visit } from 'unist-util-visit';
 import { parse } from 'space-separated-tokens';
 import isAbsoluteUrl from 'is-absolute-url';
 import lodash from 'lodash';
+
+import isUrlUkrainian from '../is-url-ukrainian';
+
 const { extend } = lodash;
 
 const defaultTarget = '_blank';
@@ -48,12 +52,16 @@ const externalLinks = (options: Options = {}) => {
             node.properties.target = target || defaultTarget;
           }
 
-          if (className) {
-            node.properties.className =
-              (node.properties.className
-                ? `${node.properties.className} `
-                : '') + className;
-          }
+          const isUkrainian = isUrlUkrainian(url);
+
+          node.properties.className = classNames(
+            node.properties.className,
+            className,
+            {
+              'wd-foreign': !isUkrainian,
+              'wd-ukrainian': isUkrainian,
+            },
+          );
 
           if (rel !== false) {
             node.properties.rel = (rel || defaultRel).toString().concat();
