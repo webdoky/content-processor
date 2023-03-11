@@ -56,8 +56,8 @@ const externalLinks = (options: Options = {}) => {
             node.properties.className,
             className,
             {
-              'wd-foreign': !isUkrainian,
-              'wd-ukrainian': isUkrainian,
+              'wd-link__foreign': !isUkrainian,
+              'wd-link__ukrainian': isUkrainian,
             },
           );
 
