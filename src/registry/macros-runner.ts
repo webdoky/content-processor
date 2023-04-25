@@ -1,5 +1,7 @@
 import { kuma } from '@webdoky/yari-ports';
 import Context from './context';
+import serializeHtmlNode from './utils/serializeHtmlNode';
+import { ExpungedMacroInsert } from '../components';
 
 const { macros: Macros, parseMacroArgs, extractMacros } = kuma;
 
@@ -94,13 +96,15 @@ export const runMacros = (
 
         result = '';
       }
-      if (result !== match) {
-        // don't spend processor cycles on replacing the same strings
-        resultContent = resultContent.replace(
-          match,
-          escapeMarkdownCharacters(result),
-        );
-      }
+      resultContent = resultContent.replace(
+        match,
+        result !== match
+          ? escapeMarkdownCharacters(result)
+          : serializeHtmlNode(
+              ExpungedMacroInsert,
+              escapeMarkdownCharacters(result),
+            ),
+      );
     }
   });
 

@@ -5,3 +5,9 @@ export const BrokenNavLink: WdBaseComponent = {
   title:
     'Це посилання веде на сторінку, якої ще не існує. Ймовірно, ми її ще не переклали.',
 };
+
+export const ExpungedMacroInsert: WdBaseComponent = {
+  className: 'wd-expunged',
+  title: 'Реалізація цього макроса іще не готова.',
+  tagName: 'span',
+};
