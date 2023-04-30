@@ -62,7 +62,7 @@ const parsePageMatter = (
   const { data, content } = parseFrontMatter(input);
 
   return {
-    data: pick(data, ['browser-compat', 'title', 'tags', 'slug']),
+    data: pick(data, ['browser-compat', 'spec-urls', 'title', 'tags', 'slug']),
     content,
   };
 };
