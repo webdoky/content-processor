@@ -98,6 +98,7 @@ type SourceType = 'md' | 'html';
 
 interface PageFrontMatter {
   'browser-compat': string;
+  'spec-urls': string;
   title: string;
   tags: string[];
   slug: string;
@@ -317,7 +318,12 @@ class Registry {
       const {
         content: rawContent,
         data,
-        data: { 'browser-compat': browserCompat, tags, title },
+        data: {
+          'browser-compat': browserCompat,
+          tags,
+          title,
+          'spec-urls': specUrls,
+        },
         path,
         hasLocalizedContent,
         ...otherPageData
@@ -328,6 +334,7 @@ class Registry {
         new Context(
           {
             browserCompat,
+            specUrls,
             path,
             slug,
             tags,

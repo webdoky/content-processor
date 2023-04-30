@@ -3,6 +3,7 @@ import JsonService from './environment/json';
 
 export interface Environment {
   browserCompat: unknown;
+  specUrls?: string;
   path: string;
   slug: string;
   tags: string[];
