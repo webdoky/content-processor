@@ -621,7 +621,7 @@ class Registry {
       content,
       data,
       sourceType,
-      data: { tags = [], 'page-type': pageType },
+      data: { tags = [], 'page-type': pageType, title },
     } = await this.readContentPage(path);
 
     const gitUpdatesInformation = hasLocalizedContent
@@ -637,6 +637,7 @@ class Registry {
       data,
       tags,
       path: `/${targetLocale}/docs/${data.slug}`,
+      title,
       pageType,
       updatesInOriginalRepo: newCommits,
       section: sectionName,
