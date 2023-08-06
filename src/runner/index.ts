@@ -60,6 +60,7 @@ export default class Runner {
         data,
         path,
         section,
+        pageType,
         updatesInOriginalRepo,
         originalPath,
         translationLastUpdatedAt,
@@ -72,6 +73,7 @@ export default class Runner {
       this.indexData.push({
         slug: data.slug || '',
         title: data.title || '',
+        pageType,
         path,
         hasContent: !!content,
       });
@@ -81,6 +83,7 @@ export default class Runner {
         description,
         hasContent: !!content,
         headings,
+        pageType,
         ...data,
         path,
         originalPath,

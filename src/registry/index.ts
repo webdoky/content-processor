@@ -62,7 +62,14 @@ const parsePageMatter = (
   const { data, content } = parseFrontMatter(input);
 
   return {
-    data: pick(data, ['browser-compat', 'spec-urls', 'title', 'tags', 'slug']),
+    data: pick(data, [
+      'browser-compat',
+      'spec-urls',
+      'title',
+      'tags',
+      'slug',
+      'page-type',
+    ]),
     content,
   };
 };
@@ -99,6 +106,7 @@ type SourceType = 'md' | 'html';
 interface PageFrontMatter {
   'browser-compat': string;
   'spec-urls': string;
+  'page-type': string;
   title: string;
   tags: string[];
   slug: string;
@@ -127,6 +135,7 @@ interface InternalPageData {
   slug: string;
   tags: string[];
   browserCompat: string;
+  pageType: string;
 
   // internal fields
   hasLocalizedContent: boolean;
@@ -322,6 +331,7 @@ class Registry {
           'browser-compat': browserCompat,
           tags,
           title,
+          'page-type': pageType,
           'spec-urls': specUrls,
         },
         path,
@@ -338,6 +348,7 @@ class Registry {
             path,
             slug,
             tags,
+            pageType,
             targetLocale,
             title,
           },
@@ -380,7 +391,12 @@ class Registry {
       } = pageData;
       const {
         path,
-        data: { 'browser-compat': browserCompat, tags, title },
+        data: {
+          'browser-compat': browserCompat,
+          tags,
+          title,
+          'page-type': pageType,
+        },
       } = pageData;
       const sourceProcessor =
         sourceType === 'html' ? this.processHtmlPage : this.processMdPage;
@@ -402,6 +418,7 @@ class Registry {
             tags,
             targetLocale,
             title,
+            pageType,
           },
           this,
         ),
@@ -604,7 +621,7 @@ class Registry {
       content,
       data,
       sourceType,
-      data: { tags = [] },
+      data: { tags = [], 'page-type': pageType },
     } = await this.readContentPage(path);
 
     const gitUpdatesInformation = hasLocalizedContent
@@ -620,6 +637,7 @@ class Registry {
       data,
       tags,
       path: `/${targetLocale}/docs/${data.slug}`,
+      pageType,
       updatesInOriginalRepo: newCommits,
       section: sectionName,
       originalPath: originalFullPath.split(sourceLocale.toLowerCase())[1],

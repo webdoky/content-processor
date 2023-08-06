@@ -7,6 +7,7 @@ export interface Environment {
   path: string;
   slug: string;
   tags: string[];
+  pageType: string;
   targetLocale: string;
   title: string;
 }

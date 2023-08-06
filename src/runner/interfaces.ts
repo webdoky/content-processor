@@ -10,6 +10,7 @@ export interface IndexFileObject {
 export interface MainIndexData {
   slug: string;
   title: string;
+  pageType: string;
   path: string;
   hasContent: boolean;
 }
@@ -36,4 +37,5 @@ export interface PageData {
   title: string;
   slug: string;
   tags: string[];
+  pageType: string;
 }
