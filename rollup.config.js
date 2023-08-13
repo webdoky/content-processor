@@ -46,5 +46,6 @@ export default {
     "unist-util-visit",
     "unist-util-visit-parents",
     "sanitize-filename",
+    'resolve-package-path',
   ],
 };
