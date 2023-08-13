@@ -1,6 +1,6 @@
 {
   "name": "@webdoky/content-processor",
-  "version": "1.21.0",
+  "version": "1.21.1",
   "description": "Content processor for WebDoky project",
   "type": "module",
   "engines": {
