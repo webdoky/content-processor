@@ -146,9 +146,11 @@ interface InternalPageData {
 
 enum MetaMacros {
   cssref = 'cssref',
-  glossarysidebar = 'glossarysidebar',
   jsref = 'jsref',
   jssidebar = 'jssidebar',
+  glossarysidebar = 'glossarysidebar',
+  htmlsidebar = 'htmlsidebar',
+  svgref = 'svgref',
 }
 
 interface SidebarNavLink {
