@@ -151,6 +151,7 @@ enum MetaMacros {
   glossarysidebar = 'glossarysidebar',
   htmlsidebar = 'htmlsidebar',
   svgref = 'svgref',
+  listsubpagesforsidebar = 'listsubpagesforsidebar',
 }
 
 interface SidebarNavLink {
