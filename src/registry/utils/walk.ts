@@ -1,7 +1,10 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 
-const walk = async (dirname, deep = true) => {
+export default async function walk(
+  dirname: string,
+  deep = true,
+): Promise<string[]> {
   const list = await fs.readdir(dirname);
   let files = [];
 
@@ -11,10 +14,13 @@ const walk = async (dirname, deep = true) => {
 
     if (fileStat && fileStat.isDirectory()) {
       if (deep) {
-        const innerList = await walk(resolvedFile);
+        const innerList = await walk(resolvedFile, deep);
         files = files.concat(innerList);
       }
     } else {
+      if (fileName !== 'index.md') {
+        return;
+      }
       files.push(resolvedFile);
     }
   });
@@ -22,6 +28,4 @@ const walk = async (dirname, deep = true) => {
   await Promise.all(operations);
 
   return files;
-};
-
-export default walk;
+}
