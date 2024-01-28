@@ -14,6 +14,7 @@ const navigationalMacros = [
   'htmlsidebar',
   'svgref',
   'listsubpagesforsidebar',
+  'listsubpages',
 ];
 
 const UNESCAPED_BACKTICK_MATCH = /([^\\])`/g;
