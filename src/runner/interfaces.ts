@@ -1,5 +1,6 @@
 import { Heading } from '../registry/utils/find-headings';
 import { ExtractedSample } from '../registry/utils/extract-live-sample';
+import type { BaselineItem } from '../components/baseline/getWebFeatureStatus';
 
 export interface IndexFileObject {
   index: MainIndexData;
@@ -38,4 +39,5 @@ export interface PageData {
   slug: string;
   tags: string[];
   pageType: string;
+  baseline?: BaselineItem;
 }
