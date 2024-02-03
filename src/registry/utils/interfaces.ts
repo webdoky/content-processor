@@ -1,4 +1,4 @@
-import { Node } from 'unist';
+import type { Node } from 'unist';
 
 export type HtmlNode = Node & {
   type: string;
