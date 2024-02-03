@@ -6,7 +6,16 @@ import { ExpungedMacroInsert } from '../components';
 const { macros: Macros, parseMacroArgs, extractMacros } = kuma;
 
 // List of macros that should be processed anyway, i.e for rendering navigation
-const navigationalMacros = ['cssref', 'jssidebar', 'jsref', 'htmlref'];
+const navigationalMacros = [
+  'cssref',
+  'jssidebar',
+  'jsref',
+  'glossarysidebar',
+  'htmlsidebar',
+  'svgref',
+  'listsubpagesforsidebar',
+  'listsubpages',
+];
 
 const UNESCAPED_BACKTICK_MATCH = /([^\\])`/g;
 const UNESCAPED_SINGLE_QUOTE_MATCH = /([^\\])'/g;

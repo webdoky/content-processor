@@ -148,6 +148,11 @@ enum MetaMacros {
   cssref = 'cssref',
   jsref = 'jsref',
   jssidebar = 'jssidebar',
+  glossarysidebar = 'glossarysidebar',
+  htmlsidebar = 'htmlsidebar',
+  svgref = 'svgref',
+  listsubpagesforsidebar = 'listsubpagesforsidebar',
+  listsubpages = 'listsubpages',
 }
 
 interface SidebarNavLink {
@@ -198,9 +203,12 @@ class Registry {
       (slugKey) => slugKey.startsWith(slug) && slugKey !== slug,
     );
     if (!includeNested) {
-      childrenSlugs = childrenSlugs.filter(
-        (childSlug) => !trimSlashes(childSlug.split(slug).at(-1)).includes('/'),
-      );
+      childrenSlugs = childrenSlugs.filter((childSlug) => {
+        const childSlugWithoutParent = trimSlashes(
+          childSlug.substring(slug.length + 1),
+        );
+        return !childSlugWithoutParent.includes('/');
+      });
     }
     return childrenSlugs.map((slugKey) => this.getPageBySlug(slugKey));
   }
