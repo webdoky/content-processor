@@ -1,6 +1,8 @@
+import type { Data, Node } from 'unist';
 import { visit } from 'unist-util-visit';
-import { HtmlNode } from './interfaces';
 import { visitParents } from 'unist-util-visit-parents';
+
+import type { HtmlNode } from './interfaces';
 
 export interface ExtractedSample {
   src: string;
@@ -19,6 +21,7 @@ const staticFrameIdPart = 'frame_';
 const cssSampleClassName = 'language-css';
 const htmlSampleClassName = 'language-html';
 const jsSampleClassName = 'language-js';
+const liveSamplePrefix = 'live-sample___';
 
 const getTextContent = (node: HtmlNode) =>
   node.children
@@ -62,7 +65,9 @@ const extractSection = (siblings: HtmlNode[], currentNode: HtmlNode) => {
   };
 };
 
-const extractLiveSamples = (ast): { [key: string]: ExtractedSample } => {
+const extractLiveSamples = (
+  ast: Node<Data>,
+): { [key: string]: ExtractedSample } => {
   const collectedSamples: { [key: string]: ExtractedSample } = {};
 
   visit(
@@ -91,6 +96,56 @@ const extractLiveSamples = (ast): { [key: string]: ExtractedSample } => {
     return collectedSamples;
   }
 
+  const handleCodeBlock = (targetId: string, sectionNode: HtmlNode) => {
+    if (!collectedSamples[targetId]) {
+      console.warn(
+        'It seems there was no EmbedLiveSample macro with id "' +
+          targetId +
+          '"',
+      );
+      return;
+    }
+    const {
+      properties: { className },
+    } = sectionNode;
+    let key: 'css' | 'html' | 'js';
+    let content: string;
+
+    if (className.includes(cssSampleClassName)) {
+      key = 'css';
+      content = getTextContent(sectionNode);
+    } else if (className.includes(htmlSampleClassName)) {
+      key = 'html';
+      content = getTextContent(sectionNode);
+    } else if (className.includes(jsSampleClassName)) {
+      key = 'js';
+      content = getTextContent(sectionNode);
+    }
+
+    // concat samples
+    collectedSamples[targetId].content[key] = collectedSamples[targetId]
+      .content[key]
+      ? `${collectedSamples[targetId].content[key]}\n${content}`
+      : content;
+  };
+
+  visit(
+    ast,
+    (node: HtmlNode) =>
+      node.properties?.className?.some((className) =>
+        className.includes(liveSamplePrefix),
+      ),
+    (node: HtmlNode) => {
+      const targetId = node.properties?.className
+        ?.find((className) => className.startsWith(liveSamplePrefix))
+        ?.substring(liveSamplePrefix.length);
+      if (!targetId) {
+        throw new Error('Could not find target id');
+      }
+      handleCodeBlock(targetId, node);
+    },
+  );
+
   visitParents(
     ast,
     (node: HtmlNode) => !!collectedSamples[node.properties?.id],
@@ -108,32 +163,8 @@ const extractLiveSamples = (ast): { [key: string]: ExtractedSample } => {
             (className?.includes(cssSampleClassName) ||
               className?.includes(htmlSampleClassName) ||
               className?.includes(jsSampleClassName)),
-          (sectionNode: HtmlNode) => {
-            const {
-              properties: { className },
-            } = sectionNode;
-            let key: 'css' | 'html' | 'js';
-            let content: string;
-
-            if (className.includes(cssSampleClassName)) {
-              key = 'css';
-              content = getTextContent(sectionNode);
-            } else if (className.includes(htmlSampleClassName)) {
-              key = 'html';
-              content = getTextContent(sectionNode);
-            } else if (className.includes(jsSampleClassName)) {
-              key = 'js';
-              content = getTextContent(sectionNode);
-            }
-
-            // concat samples
-            collectedSamples[node.properties.id].content[key] =
-              collectedSamples[node.properties.id].content[key]
-                ? `${
-                    collectedSamples[node.properties.id].content[key]
-                  }\n${content}`
-                : content;
-          },
+          (sectionNode: HtmlNode) =>
+            handleCodeBlock(node.properties.id, sectionNode),
         );
       } else {
         const preElement = node.children.find(
