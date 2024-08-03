@@ -10,7 +10,7 @@ export default {
     dir: 'dist',
     format: 'es',
   },
-  acornInjectPlugins: [ importAssertions ],
+  acornInjectPlugins: [importAssertions],
   plugins: [
     nodeResolve({
       jsnext: true,
@@ -18,7 +18,7 @@ export default {
       preferBuiltins: true,
     }),
     commonjs({
-      include: 'node_modules/**',
+      include: ['node_modules/**', '../yari-ports/**'],
     }),
     json(),
     importAssertionsPlugin(),
