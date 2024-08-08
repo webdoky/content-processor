@@ -26,6 +26,9 @@ import { SerializedMetaMacro } from '../runner/interfaces';
 import { Heading } from './utils/find-headings';
 import { pick } from 'lodash-es';
 import trimHash from '../utils/trim-hash';
+import getWebFeatureStatus, {
+  type BaselineItem,
+} from '../components/baseline/getWebFeatureStatus';
 
 /**
  * Transforms a list of paths to content files
@@ -104,8 +107,8 @@ export interface RegistryInitOptions {
 type SourceType = 'md' | 'html';
 
 interface PageFrontMatter {
-  'browser-compat': string;
-  'spec-urls': string;
+  'browser-compat': string | string[];
+  'spec-urls': string | string[];
   'page-type': string;
   title: string;
   tags: string[];
@@ -142,6 +145,7 @@ interface InternalPageData {
   referencesAll: string[];
   referencesFixable: string[];
   sourceType?: SourceType;
+  baseline?: BaselineItem;
 }
 
 enum MetaMacros {
@@ -344,7 +348,7 @@ class Registry {
         new Context(
           {
             browserCompat,
-            specUrls,
+            specUrls: typeof specUrls === 'string' ? [specUrls] : specUrls,
             path,
             slug,
             tags,
@@ -365,6 +369,11 @@ class Registry {
         },
         path,
         hasLocalizedContent,
+        baseline: browserCompat
+          ? (typeof browserCompat === 'string'
+              ? getWebFeatureStatus(browserCompat)
+              : getWebFeatureStatus(...browserCompat)) || undefined
+          : undefined,
         ...otherPageData,
       });
 
