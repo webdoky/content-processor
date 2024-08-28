@@ -1130,16 +1130,16 @@
   resolved "https://registry.yarnpkg.com/@use-it/interval/-/interval-1.0.0.tgz#c42c68f22ca29a0dc929041746373d94496d2b3a"
   integrity sha512-WQFcnSt/xM/mS8ZtJ0ut5lhPrl+V0HDPPcI/J0eUClsfiD+/r8A7IeW/pVcfpSVGWRmN3+WnjNteWuKyWs2WZg==
 
-"@webdoky/yari-ports@^3.18.0":
-  version "3.18.0"
-  resolved "https://registry.yarnpkg.com/@webdoky/yari-ports/-/yari-ports-3.18.0.tgz#0b4257a09daede60f7c8d3e86b42c24d94e007e2"
-  integrity sha512-yh6ab9pNmi5nNLBT3Tq0jXs+p0Ki3PkwzYe3W2Jhq/qL8Wpe5J6wHSD1GWbrZoF0mywEOcF2zxTuFnHrVINRzA==
+"@webdoky/yari-ports@^3.18.1":
+  version "3.18.1"
+  resolved "https://registry.yarnpkg.com/@webdoky/yari-ports/-/yari-ports-3.18.1.tgz#2bc7730c8299917a39a19b714076bc7385d9cad1"
+  integrity sha512-9Enc6lqtDNxa8oGX9N4V3GDuzEb2zPBsDeODTwkAt4oND6ARj0yCP68ttUSfeoMkUv/zlJy8RgoKHqcTzNnkWg==
   dependencies:
     "@mdn/browser-compat-data" "^4.1.2"
     "@mdn/yari" "^1.7.0"
     browser-specs "^2.19.3"
     filenamify "^5.1.1"
-    mdn-data "^2.0.26"
+    mdn-data "2.0.26"
     resolve-package-path "^4.0.3"
     unist-builder "^3.0.0"
 
@@ -5834,7 +5834,12 @@ mdn-data@2.0.14:
   resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.14.tgz#7113fc4281917d63ce29b43446f701e68c25ba50"
   integrity sha512-dn6wd0uw5GsdswPFfsgMp5NSB0/aDe6fK94YJV/AJDYXL6HVLWBsxeq7js7Ad+mU2K9LAlwpk6kN2D5mwCPVow==
 
-mdn-data@2.0.27, mdn-data@^2.0.26, mdn-data@^2.0.27:
+mdn-data@2.0.26:
+  version "2.0.26"
+  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.26.tgz#683654b390ea9c31a94aa95078347afd3e015649"
+  integrity sha512-agAtU1PRFd+fbo4Rog2A5DLnxmWvJ5+ZgbTekPj0Fil7mJFalWkg7VRyJW2FpGNc5u7VfiPoQ85u3gzp2p9iFQ==
+
+mdn-data@2.0.27, mdn-data@^2.0.27:
   version "2.0.27"
   resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.27.tgz#1710baa7b0db8176d3b3d565ccb7915fc69525ab"
   integrity sha512-kwqO0I0jtWr25KcfLm9pia8vLZ8qoAKhWZuZMbneJq3jjBD3gl5nZs8l8Tu3ZBlBAHVQtDur9rdDGyvtfVraHQ==
