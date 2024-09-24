@@ -63,7 +63,7 @@
     "remark-parse": "^10.0.1",
     "remark-rehype": "^10.1.0",
     "rimraf": "^3.0.2",
-    "rollup": "^2.75.7",
+    "rollup": "^3.29.5",
     "rollup-plugin-import-assert": "^2.1.0",
     "ts-node": "^10.8.1",
     "tslib": "~2.4",
