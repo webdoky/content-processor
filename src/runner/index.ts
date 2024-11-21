@@ -64,6 +64,7 @@ export default class Runner {
         updatesInOriginalRepo,
         originalPath,
         translationLastUpdatedAt,
+        baseline,
       } = page;
 
       if (!headings) {
@@ -91,6 +92,7 @@ export default class Runner {
         section,
         sourceLastUpdatedAt: 0,
         translationLastUpdatedAt,
+        baseline,
       });
     }
 
