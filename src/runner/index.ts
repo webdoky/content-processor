@@ -21,7 +21,6 @@ const existingSectionsUrls = [
   '/uk/docs/web/html/',
   '/uk/docs/web/css/',
   '/uk/docs/web/svg/',
-  '/uk/docs/web/guide/',
   '/uk/docs/glossary/',
 ];
 

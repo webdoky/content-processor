@@ -253,10 +253,6 @@ class Registry {
       `${pathToOriginalContent}/${sourceLocale.toLowerCase()}/web/svg`,
     );
 
-    const guideSourcePages = await walk(
-      `${pathToOriginalContent}/${sourceLocale.toLowerCase()}/web/guide`,
-    );
-
     const otherSourcePages = await walk(
       `${pathToOriginalContent}/${sourceLocale.toLowerCase()}/web/`,
       false,
@@ -290,10 +286,6 @@ class Registry {
       'javascript',
     );
     const svgProcessingTasks = await this.processSection(svgSourcePages, 'svg');
-    const guideProcessingTasks = await this.processSection(
-      guideSourcePages,
-      'guide',
-    );
     const otherPagesProcessingTasks = await this.processSection(
       otherSourcePages,
       '',
@@ -303,7 +295,6 @@ class Registry {
       'HTML Pages': htmlProcessingTasks.length,
       'JavaScript Pages': javascriptProcessingTasks.length,
       'SVG Pages': svgProcessingTasks.length,
-      Guides: guideProcessingTasks.length,
       Glossary: glossaryProcessingTasks.length,
       'Other Pages': otherPagesProcessingTasks.length,
     });
@@ -312,7 +303,6 @@ class Registry {
       ...htmlProcessingTasks,
       ...javascriptProcessingTasks,
       ...svgProcessingTasks,
-      ...guideProcessingTasks,
       ...glossaryProcessingTasks,
       ...otherPagesProcessingTasks,
     ];
